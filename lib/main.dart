@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:split_bill/feature/billhome/presentation/bill_home_page.dart';
+import 'config/router.dart' as router;
 
 void main() {
-  runApp(const MyApp());
+  runApp(const SplitBillApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class SplitBillApp extends StatefulWidget {
+  const SplitBillApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<SplitBillApp> createState() => _SplitBillAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _SplitBillAppState extends State<SplitBillApp> {
+  router.Router appRouter = router.Router();
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: appRouter.config(),
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: const BillHomePage(),
     );
   }
 }
