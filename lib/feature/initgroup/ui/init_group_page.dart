@@ -25,7 +25,8 @@ class _InitGroupPageState extends State<InitGroupPage> {
         title: Text(
           "Split Bill",
           style: TextGetter.headline6
-              ?.copyWith(color: BillColors.contentTextColor),
+              ?.copyWith(
+              color: BillColors.contentTextColor, fontWeight: FontWeight.w700),
         ),
       ),
       body: Container(
@@ -93,7 +94,8 @@ class _InitGroupPageState extends State<InitGroupPage> {
                   onPressed: controller.text.isEmpty
                       ? null
                       : () {
-                          AutoRouter.of(context).push(const InitMemberRoute());
+                          AutoRouter.of(context).push(
+                              InitMemberRoute(billTitle: controller.text));
                         },
                   child: Text(
                     "Submit to start",

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:split_bill/config/injections.dart';
 import 'config/router.dart' as router;
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initInjections();
   runApp(const SplitBillApp());
 }
 

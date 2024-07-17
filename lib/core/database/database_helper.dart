@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -18,6 +20,9 @@ class DatabaseHelper {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'app_database.db');
 
+    await Directory(dbPath).create(recursive: true);
+
+
     return await openDatabase(
       path,
       version: 1,
@@ -29,7 +34,7 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE GroupTable (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        tableName TEXT NOT NULL
+        name TEXT NOT NULL
       )
     ''');
 
@@ -41,25 +46,25 @@ class DatabaseHelper {
         money REAL NOT NULL,
         paidBy TEXT NOT NULL,
         tableId INTEGER,
-        FOREIGN KEY (tableId) REFERENCES GroupTable(id)
+        FOREIGN KEY (tableId) REFERENCES GroupTable(id) ON DELETE CASCADE
       )
     ''');
 
     await db.execute('''
-      CREATE TABLE Table_Members (
+      CREATE TABLE TableMembers (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         tableId INTEGER,
         member TEXT NOT NULL,
-        FOREIGN KEY (tableId) REFERENCES GroupTable(id)
+        FOREIGN KEY (tableId) REFERENCES GroupTable(id) ON DELETE CASCADE
       )
     ''');
 
     await db.execute('''
-      CREATE TABLE Bill_SettledBy (
+      CREATE TABLE BillSettledBy (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         billId INTEGER,
         settledBy TEXT NOT NULL,
-        FOREIGN KEY (billId) REFERENCES Bill(id)
+        FOREIGN KEY (billId) REFERENCES Bill(id) ON DELETE CASCADE
       )
     ''');
   }
