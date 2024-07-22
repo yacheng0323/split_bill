@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:split_bill/config/router.gr.dart';
 import 'package:split_bill/core/ui/color.dart';
+import 'package:split_bill/core/ui/show_snack_bar.dart';
 import 'package:split_bill/core/ui/textstyle.dart';
 import 'package:split_bill/feature/initmember/domain/init_member_view_model.dart';
 
@@ -116,7 +117,7 @@ class _InitMemberPageState extends State<InitMemberPage> {
                                       onPressed: controller.text.isEmpty
                                           ? null
                                           : () {
-                                              vm.addMember(controller.text);
+                                              members.contains(controller.text) ? ShowSnackBarHelper.errorSnackBar(context: context).showSnackbar("Member already added") : vm.addMember(controller.text);
                                               setState(() {
                                                 controller.text = "";
                                               });
@@ -158,11 +159,24 @@ class _InitMemberPageState extends State<InitMemberPage> {
                                         "Members",
                                         style: TextGetter.botton?.copyWith(color: BillColors.contentTextColor, fontWeight: FontWeight.w700),
                                       ),
+                                      members.length < 2
+                                          ? Text(
+                                              "*At least two members are required",
+                                              style: TextGetter.botton?.copyWith(color: Colors.red),
+                                            )
+                                          : const SizedBox.shrink(),
                                       const Padding(padding: EdgeInsets.all(4)),
                                       Container(
                                         decoration: BoxDecoration(
                                           color: Colors.white,
-                                          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.25), spreadRadius: 1, blurRadius: 12, offset: const Offset(0, 4))],
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(0.25),
+                                              spreadRadius: 1,
+                                              blurRadius: 12,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ],
                                           borderRadius: BorderRadius.circular(10),
                                         ),
                                         padding: const EdgeInsets.fromLTRB(12, 24, 12, 0),
@@ -171,7 +185,7 @@ class _InitMemberPageState extends State<InitMemberPage> {
                                           shrinkWrap: true,
                                           itemBuilder: (context, index) {
                                             return Container(
-                                              margin: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                              margin: const EdgeInsets.fromLTRB(0, 8, 0, 16),
                                               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                               decoration: BoxDecoration(
                                                 color: BillColors.lightYellow,

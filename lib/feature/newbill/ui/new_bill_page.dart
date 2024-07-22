@@ -437,10 +437,7 @@ class _NewBillPageState extends State<NewBillPage> {
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: BillColors.lightYellow,
                                         elevation: 4,
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 53,
-                                          vertical: 10,
-                                        ),
+                                        padding: const EdgeInsets.symmetric(vertical: 10),
                                       ),
                                       onPressed: () {
                                         Navigator.of(context).pop();
@@ -461,7 +458,7 @@ class _NewBillPageState extends State<NewBillPage> {
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: BillColors.deepYellow,
                                               elevation: 4,
-                                              padding: const EdgeInsets.symmetric(horizontal: 53, vertical: 10),
+                                              padding: const EdgeInsets.symmetric(vertical: 10),
                                             ),
                                             onPressed: () async {
                                               if (formKey.currentState?.validate() == true) {

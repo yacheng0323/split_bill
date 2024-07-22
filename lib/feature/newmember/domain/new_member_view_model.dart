@@ -8,6 +8,15 @@ class NewMemberViewModel {
 
   InsertMemberResult? get result => _result.value;
 
+  final _members = BehaviorSubject<List<String>?>.seeded(null);
+
+  List<String>? get members => _members.value;
+
+  Future<void> getMembers(int tableId) async {
+    final dbService = GetIt.I.get<DatabaseService>();
+    _members.add(await dbService.getTableMembers(tableId));
+  }
+
   Future<void> addMember(int tableId, String member) async {
     try {
       final dbService = GetIt.I.get<DatabaseService>();

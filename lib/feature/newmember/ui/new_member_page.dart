@@ -30,7 +30,10 @@ class _NewMemberPageState extends State<NewMemberPage> {
   @override
   Widget build(BuildContext context) {
     return Provider<NewMemberViewModel>(
-      create: (context) => newMemberViewModel,
+      create: (context) {
+        newMemberViewModel.getMembers(widget.tableId);
+        return newMemberViewModel;
+      },
       builder: (context, child) {
         return Consumer<NewMemberViewModel>(
           builder: (context, vm, child) {
@@ -107,7 +110,7 @@ class _NewMemberPageState extends State<NewMemberPage> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: BillColors.lightYellow,
                                 elevation: 4,
-                                padding: const EdgeInsets.symmetric(horizontal: 53, vertical: 10),
+                                padding: const EdgeInsets.symmetric(vertical: 10),
                               ),
                               onPressed: () {
                                 Navigator.of(context).pop();
@@ -124,12 +127,12 @@ class _NewMemberPageState extends State<NewMemberPage> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: BillColors.deepYellow,
                                 elevation: 4,
-                                padding: const EdgeInsets.symmetric(horizontal: 53, vertical: 10),
+                                padding: const EdgeInsets.symmetric(vertical: 10),
                               ),
                               onPressed: controller.text.isEmpty
                                   ? null
                                   : () async {
-                                      await vm.addMember(widget.tableId, controller.text);
+                                      vm.members!.contains(controller.text) ? ShowSnackBarHelper.errorSnackBar(context: context).showSnackbar("Member already exists.") : await vm.addMember(widget.tableId, controller.text);
 
                                       if (vm.result != null) {
                                         if (vm.result!.isSuccess) {

@@ -312,7 +312,7 @@ class _BillHomePageState extends State<BillHomePage> with SingleTickerProviderSt
                                                                               borderRadius: BorderRadius.circular(3),
                                                                               color: Colors.white,
                                                                             ),
-                                                                            child: Text(settle.substring(0, 2)),
+                                                                            child: Text(settle.length > 2 ? settle.substring(0, 2) : settle),
                                                                           );
                                                                         }).toList(),
                                                                       )
@@ -340,7 +340,7 @@ class _BillHomePageState extends State<BillHomePage> with SingleTickerProviderSt
                     bottomNavigationBar: tables.isNotEmpty
                         ? const SizedBox.shrink()
                         : Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 88),
+                            padding: const EdgeInsets.symmetric(horizontal: 60),
                             child: SafeArea(
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(

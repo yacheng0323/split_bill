@@ -192,7 +192,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
                                       onPressed: memberNameController.text.isEmpty
                                           ? null
                                           : () {
-                                              vm.addMember(memberNameController.text);
+                                              members.contains(memberNameController.text) ? ShowSnackBarHelper.errorSnackBar(context: context).showSnackbar("Member already added") : vm.addMember(memberNameController.text);
 
                                               setState(() {
                                                 memberNameController.text = "";
@@ -252,7 +252,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
                             Expanded(
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(horizontal: 53, vertical: 10),
+                                  padding: const EdgeInsets.symmetric(vertical: 10),
                                   backgroundColor: BillColors.lightYellow,
                                   elevation: 4,
                                 ),
@@ -273,7 +273,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
                                   return Expanded(
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(horizontal: 53, vertical: 10),
+                                        padding: const EdgeInsets.symmetric(vertical: 10),
                                         backgroundColor: BillColors.deepYellow,
                                         elevation: 4,
                                       ),

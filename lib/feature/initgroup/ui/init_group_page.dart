@@ -83,7 +83,7 @@ class _InitGroupPageState extends State<InitGroupPage> {
                 )),
             const Spacer(),
             Padding(
-              padding: const EdgeInsets.fromLTRB(56.5, 0, 56.5, 32),
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 32),
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: BillColors.deepYellow,
