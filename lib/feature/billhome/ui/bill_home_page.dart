@@ -216,7 +216,7 @@ class _BillHomePageState extends State<BillHomePage> with SingleTickerProviderSt
                                                                     child: Text(item.creditor, style: textstyle, textAlign: TextAlign.center),
                                                                   ),
                                                                   Expanded(
-                                                                    child: Text("\$${item.amount}", style: textstyle, textAlign: TextAlign.end),
+                                                                    child: Text("\$${item.amount.toStringAsFixed(0)}", style: textstyle, textAlign: TextAlign.end),
                                                                   ),
                                                                 ],
                                                               ),
@@ -294,7 +294,7 @@ class _BillHomePageState extends State<BillHomePage> with SingleTickerProviderSt
                                                                         child: Text(item.paidBy, style: textStyle, textAlign: TextAlign.center),
                                                                       ),
                                                                       Expanded(
-                                                                        child: Text("\$${item.money}", style: textStyle, textAlign: TextAlign.end),
+                                                                        child: Text("\$${item.money.toStringAsFixed(0)}", style: textStyle, textAlign: TextAlign.end),
                                                                       ),
                                                                     ],
                                                                   ),

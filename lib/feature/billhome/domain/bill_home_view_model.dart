@@ -88,7 +88,8 @@ class BillHomeViewModel {
     });
 
     debts.forEach((debt) {
-      debugPrint('${debt.debtor} 欠 ${debt.creditor} ${debt.amount} 元');
+      double payment = debt.amount;
+      debugPrint('${debt.debtor} 欠 ${debt.creditor} ${payment.toStringAsFixed(2)} 元');
     });
 
     _billList.add(billsWithSettledBy);

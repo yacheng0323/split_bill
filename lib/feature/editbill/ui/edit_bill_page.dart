@@ -28,7 +28,7 @@ class _EditBillPageState extends State<EditBillPage> {
   final formKey = GlobalKey<FormState>();
   late final titleController = TextEditingController(text: widget.billModel.title);
   late final dateController = TextEditingController(text: DateFormat("yyyy/MM/dd").format(DateTime.fromMillisecondsSinceEpoch(widget.billModel.dateTime * 1000)));
-  late final amountController = TextEditingController(text: "\$${widget.billModel.money}");
+  late final amountController = TextEditingController(text: "\$${widget.billModel.money.toStringAsFixed(0)}");
   late final paidByController = TextEditingController(text: widget.billModel.paidBy);
   late final settledByController = TextEditingController(text: widget.billModel.settledBy.map((e) => e).toString());
 

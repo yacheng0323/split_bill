@@ -466,6 +466,7 @@ class _NewBillPageState extends State<NewBillPage> {
                                             onPressed: () async {
                                               if (formKey.currentState?.validate() == true) {
                                                 double money = double.parse(amountController.text.replaceFirst("\$", ""));
+                                                money = double.parse(money.toStringAsFixed(0));
                                                 final result = await vm.addBill(tableId: widget.tableId, title: titleController.text, money: money, paidBy: paidByController.text);
                                                 if (result.isSuccess) {
                                                   // ignore: use_build_context_synchronously
