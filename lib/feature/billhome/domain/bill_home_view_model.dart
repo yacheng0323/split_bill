@@ -62,46 +62,35 @@ class BillHomeViewModel {
       List<String> participants = bill.settledBy;
       double splitAmount = bill.money / participants.length;
 
-      // 更新支付者的結算情況
       balances[paidBy] = (balances[paidBy] ?? 0) + (bill.money - splitAmount);
 
-      // 更新參與者的結算情況
-      for (var participant in participants) {
+      participants.forEach((participant) {
         if (participant != paidBy) {
           balances[participant] = (balances[participant] ?? 0) - splitAmount;
         }
-      }
+      });
     }
 
     List<DebtModel> debts = [];
 
     balances.forEach((debtor, amount) {
-      // 如果 amount 為負，表示 debtor 需要支付給其他人
       if (amount < 0) {
-        // 尋找可以收款的人
         balances.forEach((creditor, value) {
-          // 如果 creditor 收到的金額為正，表示可以收款
           if (value > 0) {
-            // 確定 debtor 需要支付的金額
             double toPay = amount.abs();
-            // 如果 creditor 收到的金額大於 debtor 需要支付的金額
-            if (value >= toPay) {
-              debts.add(DebtModel(debtor: debtor, creditor: creditor, amount: toPay));
-              balances[creditor] = value - toPay;
-              balances[debtor] = 0;
-            } else {
-              debts.add(DebtModel(debtor: debtor, creditor: creditor, amount: value));
-              balances[creditor] = 0;
-              balances[debtor] = amount + value;
-            }
+            double payment = value >= toPay ? toPay : value;
+            debts.add(DebtModel(debtor: debtor, creditor: creditor, amount: payment));
+            balances[creditor] = value - payment;
+            balances[debtor] = 0;
           }
         });
       }
     });
 
-    for (var debt in debts) {
+    debts.forEach((debt) {
       debugPrint('${debt.debtor} 欠 ${debt.creditor} ${debt.amount} 元');
-    }
+    });
+
     _billList.add(billsWithSettledBy);
     _debtList.add(debts);
   }
