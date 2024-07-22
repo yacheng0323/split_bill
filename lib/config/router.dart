@@ -12,5 +12,6 @@ class Router extends $Router {
         AutoRoute(page: NewGroupRoute.page),
         AutoRoute(page: NewMemberRoute.page),
         AutoRoute(page: NewBillRoute.page),
+        AutoRoute(page: EditBillRoute.page),
       ];
 }

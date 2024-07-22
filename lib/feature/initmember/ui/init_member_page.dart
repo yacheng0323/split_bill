@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:split_bill/config/router.gr.dart';
 import 'package:split_bill/core/ui/color.dart';
 import 'package:split_bill/core/ui/textstyle.dart';
 import 'package:split_bill/feature/initmember/domain/init_member_view_model.dart';
@@ -246,6 +247,11 @@ class _InitMemberPageState extends State<InitMemberPage> {
                                   child: ElevatedButton(
                                     onPressed: () async {
                                       await vm.submit(widget.billTitle);
+                                      AutoRouter.of(context).pushAndPopUntil(
+                                          const BillHomeRoute(),
+                                          predicate: (Route<dynamic> route) {
+                                        return true;
+                                      });
                                     },
                                     style: ElevatedButton.styleFrom(
                                         elevation: 6,

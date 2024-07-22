@@ -24,7 +24,6 @@ class _NewMemberPageState extends State<NewMemberPage> {
   @override
   void initState() {
     newMemberViewModel = NewMemberViewModel();
-    print(widget.tableId);
     super.initState();
   }
 
@@ -143,6 +142,7 @@ class _NewMemberPageState extends State<NewMemberPage> {
                                                   context: context)
                                               .showSnackbar(
                                                   "Member added successfully.");
+                                          Navigator.of(context).pop();
                                         } else {
                                           ShowSnackBarHelper.errorSnackBar(
                                                   context: context)

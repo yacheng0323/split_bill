@@ -3,9 +3,9 @@ import 'package:rxdart/streams.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:split_bill/core/database/database_service.dart';
 import 'package:split_bill/entities/bill_model.dart';
-import 'package:split_bill/entities/result/new_bill_result.dart';
+import 'package:split_bill/entities/result/edit_bill_result.dart';
 
-class NewBillViewModel {
+class EditBillViewModel {
   final _members = BehaviorSubject<List<String>?>.seeded(null);
 
   ValueStream<List<String>?> get members => _members;
@@ -18,10 +18,11 @@ class NewBillViewModel {
 
   DateTime get dateTime => _dateTime.value;
 
-  Future<void> init(int tableId) async {
+  Future<void> init(int tableId, List<String> settledMembers) async {
     final dbService = GetIt.I.get<DatabaseService>();
 
     List<String> memberList = await dbService.getTableMembers(tableId);
+    _settledMembers.add(settledMembers);
     _members.add(memberList);
   }
 
@@ -39,25 +40,24 @@ class NewBillViewModel {
     _dateTime.add(date);
   }
 
-  Future<NewBillResult> addBill(
-      {required int tableId,
-      required String title,
-      required double money,
-      required String paidBy}) async {
+  Future<EditBillResult> updateBill(int billid, int tableId, String title,
+      double money, String paidBy) async {
     try {
       final dbService = GetIt.I.get<DatabaseService>();
-      await dbService.insertBill(BillModel(
-          title: title,
-          dateTime: (_dateTime.value.millisecondsSinceEpoch ~/ 1000),
+      BillModel bill = BillModel(
+          id: billid,
           tableId: tableId,
+          title: title,
+          dateTime: _dateTime.value.millisecondsSinceEpoch ~/ 1000,
           money: money,
           paidBy: paidBy,
-          settledBy: _settledMembers.value));
-      return NewBillResult(isSuccess: true);
+          settledBy: _settledMembers.value);
+      await dbService.updateBill(bill);
+      return EditBillResult(
+        isSuccess: true,
+      );
     } catch (e) {
-      return NewBillResult(isSuccess: false, errorMessage: "$e");
+      return EditBillResult(isSuccess: false, errorMessags: "$e");
     }
- 
-
   }
 }

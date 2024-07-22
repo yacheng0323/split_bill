@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:split_bill/core/database/database_service.dart';
-import 'package:split_bill/entities/insert_member_result.dart';
+import 'package:split_bill/entities/result/insert_member_result.dart';
 
 class NewMemberViewModel {
   final _result = BehaviorSubject<InsertMemberResult?>.seeded(null);

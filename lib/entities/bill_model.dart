@@ -5,6 +5,7 @@ class BillModel {
   final double money;
   final String paidBy;
   final int? tableId;
+  final List<String> settledBy; 
 
   BillModel({
     this.id,
@@ -13,6 +14,7 @@ class BillModel {
     required this.money,
     required this.paidBy,
     this.tableId,
+    required this.settledBy, 
   });
 
   Map<String, dynamic> toMap() {
@@ -34,6 +36,7 @@ class BillModel {
       money: map['money'],
       paidBy: map['paidBy'],
       tableId: map['tableId'],
+      settledBy: List<String>.from(map['settledBy'] ?? []), 
     );
   }
 }

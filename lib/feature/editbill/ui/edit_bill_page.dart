@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,31 +8,42 @@ import 'package:provider/provider.dart';
 import 'package:split_bill/core/ui/color.dart';
 import 'package:split_bill/core/ui/show_snack_bar.dart';
 import 'package:split_bill/core/ui/textstyle.dart';
+import 'package:split_bill/entities/bill_model.dart';
 import 'package:split_bill/feature/billhome/domain/bill_home_view_model.dart';
-import 'package:split_bill/feature/newbill/domain/new_bill_view_model.dart';
+import 'package:split_bill/feature/editbill/domain/edit_bill_view_model.dart';
 
 @RoutePage()
-class NewBillPage extends StatefulWidget {
-  const NewBillPage({super.key, required this.tableId});
+class EditBillPage extends StatefulWidget {
+  const EditBillPage(
+      {super.key, required this.billModel, required this.tableId});
 
+  final BillModel billModel;
   final int tableId;
 
   @override
-  State<NewBillPage> createState() => _NewBillPageState();
+  State<EditBillPage> createState() => _EditBillPageState();
 }
 
-class _NewBillPageState extends State<NewBillPage> {
-  late NewBillViewModel newBillViewModel;
+class _EditBillPageState extends State<EditBillPage> {
+  late EditBillViewModel editBillViewModel;
   final formKey = GlobalKey<FormState>();
-  final TextEditingController titleController = TextEditingController();
-  final TextEditingController dateController = TextEditingController();
-  final TextEditingController amountController = TextEditingController();
-  final TextEditingController paidByController = TextEditingController();
-  final TextEditingController settledByController = TextEditingController();
+  late final titleController =
+      TextEditingController(text: widget.billModel.title);
+  late final dateController = TextEditingController(
+      text: DateFormat("yyyy/MM/dd").format(DateTime.fromMillisecondsSinceEpoch(
+          widget.billModel.dateTime * 1000)));
+  late final amountController =
+      TextEditingController(text: "\$${widget.billModel.money}");
+  late final paidByController =
+      TextEditingController(text: widget.billModel.paidBy);
+  late final settledByController = TextEditingController(
+      text: widget.billModel.settledBy.map((e) => e).toString());
 
   @override
   void initState() {
-    newBillViewModel = NewBillViewModel();
+    editBillViewModel = EditBillViewModel();
+    print(widget.billModel.id);
+    print(settledByController.text);
     super.initState();
   }
 
@@ -62,11 +71,13 @@ class _NewBillPageState extends State<NewBillPage> {
                 fontWeight: FontWeight.w700),
           ),
         ),
-        body: Provider<NewBillViewModel>(create: (context) {
-          newBillViewModel.init(widget.tableId);
-          return newBillViewModel;
+        body: Provider<EditBillViewModel>(create: (context) {
+          List<String> settledList =
+              widget.billModel.settledBy.map((e) => e).toList();
+          editBillViewModel.init(widget.tableId, settledList);
+          return editBillViewModel;
         }, builder: (context, child) {
-          return Consumer<NewBillViewModel>(
+          return Consumer<EditBillViewModel>(
             builder: (context, vm, child) {
               return SingleChildScrollView(
                 child: Form(
@@ -382,7 +393,6 @@ class _NewBillPageState extends State<NewBillPage> {
                                         ),
                                       ),
                                       child: TextFormField(
-                                        
                                         controller: settledByController,
                                         onChanged: (value) {},
                                         validator: (value) {
@@ -443,7 +453,7 @@ class _NewBillPageState extends State<NewBillPage> {
                                                                         : vm.settledMembers
                                                                             .value
                                                                             .map((e) =>
-                                                                                e)
+                                                                                "$e")
                                                                             .toString();
                                                                   });
                                                                 },
@@ -566,19 +576,22 @@ class _NewBillPageState extends State<NewBillPage> {
                                                     amountController.text
                                                         .replaceFirst(
                                                             "\$", ""));
-                                                final result = await vm.addBill(
-                                                    tableId: widget.tableId,
-                                                    title: titleController.text,
-                                                    money: money,
-                                                    paidBy:
+
+                                                final result =
+                                                    await vm.updateBill(
+                                                        widget.billModel.id ??
+                                                            0,
+                                                        widget.tableId,
+                                                        titleController.text,
+                                                        money,
                                                         paidByController.text);
                                                 if (result.isSuccess) {
-                                                  // await viewModel.initData();
+                                                  await viewModel.initData();
                                                   ShowSnackBarHelper
                                                           .successSnackBar(
                                                               context: context)
                                                       .showSnackbar(
-                                                          "New Bill Success");
+                                                          "Update Success");
                                                   Navigator.of(context)
                                                       .pop(true);
                                                 } else {
@@ -586,13 +599,13 @@ class _NewBillPageState extends State<NewBillPage> {
                                                           .errorSnackBar(
                                                               context: context)
                                                       .showSnackbar(
-                                                          result.errorMessage ??
+                                                          result.errorMessags ??
                                                               "");
                                                 }
                                               }
                                             },
                                             child: Text(
-                                              "Add",
+                                              "Update",
                                               style: TextGetter.bodyText1
                                                   ?.copyWith(
                                                       color: Colors.white),
