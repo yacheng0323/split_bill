@@ -40,9 +40,7 @@ class _NewMemberPageState extends State<NewMemberPage> {
                 backgroundColor: BillColors.backgroundColor,
                 title: Text(
                   "New Member",
-                  style: TextGetter.headline6?.copyWith(
-                      color: BillColors.contentTextColor,
-                      fontWeight: FontWeight.w700),
+                  style: TextGetter.headline6?.copyWith(color: BillColors.contentTextColor, fontWeight: FontWeight.w700),
                 ),
               ),
               body: Container(
@@ -52,10 +50,11 @@ class _NewMemberPageState extends State<NewMemberPage> {
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
-                        color: Colors.black.withOpacity(0.25),
-                        spreadRadius: 1,
-                        blurRadius: 12,
-                        offset: const Offset(0, 4))
+                      color: Colors.black.withOpacity(0.25),
+                      spreadRadius: 1,
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
                   ],
                   color: Colors.white,
                 ),
@@ -86,18 +85,16 @@ class _NewMemberPageState extends State<NewMemberPage> {
                               });
                             },
                             controller: controller,
-                            inputFormatters: [
-                              LengthLimitingTextInputFormatter(20)
-                            ],
+                            inputFormatters: [LengthLimitingTextInputFormatter(20)],
                             decoration: InputDecoration(
-                                hintText: "Enter A Member Name",
-                                hintStyle: TextGetter.bodyText1
-                                    ?.copyWith(color: const Color(0xffAAAAAA)),
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 7.5),
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                    borderRadius: BorderRadius.circular(30))),
+                              hintText: "Enter A Member Name",
+                              hintStyle: TextGetter.bodyText1?.copyWith(color: const Color(0xffAAAAAA)),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7.5),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
                           ),
                         )),
                     const Spacer(),
@@ -108,17 +105,16 @@ class _NewMemberPageState extends State<NewMemberPage> {
                           Expanded(
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                  backgroundColor: BillColors.lightYellow,
-                                  elevation: 4,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 53, vertical: 10)),
+                                backgroundColor: BillColors.lightYellow,
+                                elevation: 4,
+                                padding: const EdgeInsets.symmetric(horizontal: 53, vertical: 10),
+                              ),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
                               child: Text(
                                 "Cancel",
-                                style: TextGetter.bodyText1?.copyWith(
-                                    color: BillColors.contentTextColor),
+                                style: TextGetter.bodyText1?.copyWith(color: BillColors.contentTextColor),
                               ),
                             ),
                           ),
@@ -126,36 +122,30 @@ class _NewMemberPageState extends State<NewMemberPage> {
                           Expanded(
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                  backgroundColor: BillColors.deepYellow,
-                                  elevation: 4,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 53, vertical: 10)),
+                                backgroundColor: BillColors.deepYellow,
+                                elevation: 4,
+                                padding: const EdgeInsets.symmetric(horizontal: 53, vertical: 10),
+                              ),
                               onPressed: controller.text.isEmpty
                                   ? null
                                   : () async {
-                                      await vm.addMember(
-                                          widget.tableId, controller.text);
+                                      await vm.addMember(widget.tableId, controller.text);
 
                                       if (vm.result != null) {
                                         if (vm.result!.isSuccess) {
-                                          ShowSnackBarHelper.successSnackBar(
-                                                  context: context)
-                                              .showSnackbar(
-                                                  "Member added successfully.");
+                                          // ignore: use_build_context_synchronously
+                                          ShowSnackBarHelper.successSnackBar(context: context).showSnackbar("Member added successfully.");
+                                          // ignore: use_build_context_synchronously
                                           Navigator.of(context).pop();
                                         } else {
-                                          ShowSnackBarHelper.errorSnackBar(
-                                                  context: context)
-                                              .showSnackbar(
-                                                  vm.result!.errorMessags ??
-                                                      "");
+                                          // ignore: use_build_context_synchronously
+                                          ShowSnackBarHelper.errorSnackBar(context: context).showSnackbar(vm.result!.errorMessags ?? "");
                                         }
                                       }
                                     },
                               child: Text(
                                 "Add",
-                                style: TextGetter.bodyText1
-                                    ?.copyWith(color: Colors.white),
+                                style: TextGetter.bodyText1?.copyWith(color: Colors.white),
                               ),
                             ),
                           ),

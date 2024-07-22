@@ -39,25 +39,27 @@ class NewBillViewModel {
     _dateTime.add(date);
   }
 
-  Future<NewBillResult> addBill(
-      {required int tableId,
-      required String title,
-      required double money,
-      required String paidBy}) async {
+  Future<NewBillResult> addBill({
+    required int tableId,
+    required String title,
+    required double money,
+    required String paidBy,
+  }) async {
     try {
       final dbService = GetIt.I.get<DatabaseService>();
-      await dbService.insertBill(BillModel(
+      await dbService.insertBill(
+        BillModel(
           title: title,
           dateTime: (_dateTime.value.millisecondsSinceEpoch ~/ 1000),
           tableId: tableId,
           money: money,
           paidBy: paidBy,
-          settledBy: _settledMembers.value));
+          settledBy: _settledMembers.value,
+        ),
+      );
       return NewBillResult(isSuccess: true);
     } catch (e) {
       return NewBillResult(isSuccess: false, errorMessage: "$e");
     }
- 
-
   }
 }

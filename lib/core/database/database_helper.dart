@@ -22,7 +22,6 @@ class DatabaseHelper {
 
     await Directory(dbPath).create(recursive: true);
 
-
     return await openDatabase(
       path,
       version: 1,
@@ -68,6 +67,4 @@ class DatabaseHelper {
       )
     ''');
   }
-
-  
 }

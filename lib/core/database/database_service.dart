@@ -1,8 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:split_bill/core/database/database_helper.dart';
 import 'package:split_bill/entities/bill_model.dart';
 import 'package:split_bill/entities/group_table_model.dart';
-import 'package:split_bill/entities/result/insert_member_result.dart';
-import 'package:sqflite/sqflite.dart';
 
 class DatabaseService {
   final DatabaseHelper _dbHelper = DatabaseHelper();
@@ -158,8 +157,7 @@ class DatabaseService {
         where: 'billId = ?',
         whereArgs: [bill.id],
       );
-      print(
-          'Deleted $deletedCount records from BillSettledBy for billId ${bill.id}');
+      debugPrint('Deleted $deletedCount records from BillSettledBy for billId ${bill.id}');
 
       for (String settle in bill.settledBy) {
         int insertedId = await txn.insert('BillSettledBy', {
@@ -172,5 +170,4 @@ class DatabaseService {
       }
     });
   }
-
 }

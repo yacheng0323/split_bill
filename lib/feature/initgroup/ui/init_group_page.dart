@@ -24,9 +24,7 @@ class _InitGroupPageState extends State<InitGroupPage> {
         backgroundColor: BillColors.backgroundColor,
         title: Text(
           "Split Bill",
-          style: TextGetter.headline6
-              ?.copyWith(
-              color: BillColors.contentTextColor, fontWeight: FontWeight.w700),
+          style: TextGetter.headline6?.copyWith(color: BillColors.contentTextColor, fontWeight: FontWeight.w700),
         ),
       ),
       body: Container(
@@ -36,10 +34,11 @@ class _InitGroupPageState extends State<InitGroupPage> {
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-                color: Colors.black.withOpacity(0.25),
-                spreadRadius: 1,
-                blurRadius: 12,
-                offset: const Offset(0, 4))
+              color: Colors.black.withOpacity(0.25),
+              spreadRadius: 1,
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
           ],
           color: Colors.white,
         ),
@@ -72,14 +71,14 @@ class _InitGroupPageState extends State<InitGroupPage> {
                     controller: controller,
                     inputFormatters: [LengthLimitingTextInputFormatter(20)],
                     decoration: InputDecoration(
-                        hintText: "Enter A Group Name",
-                        hintStyle: TextGetter.bodyText1
-                            ?.copyWith(color: const Color(0xffAAAAAA)),
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 7.5),
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(30))),
+                      hintText: "Enter A Group Name",
+                      hintStyle: TextGetter.bodyText1?.copyWith(color: const Color(0xffAAAAAA)),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7.5),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
                   ),
                 )),
             const Spacer(),
@@ -87,15 +86,16 @@ class _InitGroupPageState extends State<InitGroupPage> {
               padding: const EdgeInsets.fromLTRB(56.5, 0, 56.5, 32),
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: BillColors.deepYellow,
-                      elevation: 4,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 48, vertical: 10)),
+                    backgroundColor: BillColors.deepYellow,
+                    elevation: 4,
+                    padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 10),
+                  ),
                   onPressed: controller.text.isEmpty
                       ? null
                       : () {
                           AutoRouter.of(context).push(
-                              InitMemberRoute(billTitle: controller.text));
+                            InitMemberRoute(billTitle: controller.text),
+                          );
                         },
                   child: Text(
                     "Submit to start",

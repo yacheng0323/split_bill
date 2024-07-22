@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rxdart/streams.dart';
 import 'package:rxdart/subjects.dart';
@@ -5,6 +6,8 @@ import 'package:split_bill/core/database/database_service.dart';
 import 'package:split_bill/entities/bill_model.dart';
 import 'package:split_bill/entities/debt_model.dart';
 import 'package:split_bill/entities/group_table_model.dart';
+import 'package:split_bill/entities/result/delete_group_result.dart';
+import 'package:split_bill/entities/result/update_group_result.dart';
 
 class BillHomeViewModel {
   final _groupTables = BehaviorSubject<List<GroupTableModel>?>.seeded(null);
@@ -68,7 +71,6 @@ class BillHomeViewModel {
           balances[participant] = (balances[participant] ?? 0) - splitAmount;
         }
       }
-      print(balances);
     }
 
     List<DebtModel> debts = [];
@@ -84,13 +86,11 @@ class BillHomeViewModel {
             double toPay = amount.abs();
             // 如果 creditor 收到的金額大於 debtor 需要支付的金額
             if (value >= toPay) {
-              debts.add(
-                  DebtModel(debtor: debtor, creditor: creditor, amount: toPay));
+              debts.add(DebtModel(debtor: debtor, creditor: creditor, amount: toPay));
               balances[creditor] = value - toPay;
               balances[debtor] = 0;
             } else {
-              debts.add(
-                  DebtModel(debtor: debtor, creditor: creditor, amount: value));
+              debts.add(DebtModel(debtor: debtor, creditor: creditor, amount: value));
               balances[creditor] = 0;
               balances[debtor] = amount + value;
             }
@@ -99,18 +99,22 @@ class BillHomeViewModel {
       }
     });
 
-    // 輸出最終的欠款情況
-    debts.forEach((debt) {
-      print('${debt.debtor} 欠 ${debt.creditor} ${debt.amount} 元');
-    });
+    for (var debt in debts) {
+      debugPrint('${debt.debtor} 欠 ${debt.creditor} ${debt.amount} 元');
+    }
     _billList.add(billsWithSettledBy);
     _debtList.add(debts);
   }
 
-  Future<void> updateTableName(String newTitle, int id) async {
-    final dbService = GetIt.I.get<DatabaseService>();
-    await dbService.updateTableTitle(id, newTitle);
-    await initData();
+  Future<UpdateGroupResult> updateGroupName(String newTitle, int id) async {
+    try {
+      final dbService = GetIt.I.get<DatabaseService>();
+      await dbService.updateTableTitle(id, newTitle);
+      await initData();
+      return UpdateGroupResult(isSuccess: true);
+    } catch (e) {
+      return UpdateGroupResult(isSuccess: false, errorMessage: "$e");
+    }
   }
 
   Future<void> changeGroup(int id) async {
@@ -118,10 +122,15 @@ class BillHomeViewModel {
     await initData();
   }
 
-  Future<void> deleteGroup(int id) async {
-    final dbService = GetIt.I.get<DatabaseService>();
-    await dbService.deleteTable(id);
-    _tableId.add(null);
-    await initData();
+  Future<DeleteGroupResult> deleteGroup(int id) async {
+    try {
+      final dbService = GetIt.I.get<DatabaseService>();
+      await dbService.deleteTable(id);
+      _tableId.add(null);
+      await initData();
+      return DeleteGroupResult(isSuccess: true);
+    } catch (e) {
+      return DeleteGroupResult(isSuccess: false, errorMessage: "$e");
+    }
   }
 }

@@ -14,9 +14,9 @@ class NewMemberViewModel {
       await dbService.insertTableMembers(tableId, [member]);
       _result.add(InsertMemberResult(isSuccess: true));
     } catch (e) {
-      _result.add(InsertMemberResult(
-          isSuccess: false,
-          errorMessags: "Failed to add member. Please try again later."));
+      _result.add(
+        InsertMemberResult(isSuccess: false, errorMessags: "Failed to add member. Please try again later."),
+      );
     }
   }
 }

@@ -40,18 +40,24 @@ class EditBillViewModel {
     _dateTime.add(date);
   }
 
-  Future<EditBillResult> updateBill(int billid, int tableId, String title,
-      double money, String paidBy) async {
+  Future<EditBillResult> updateBill(
+    int billid,
+    int tableId,
+    String title,
+    double money,
+    String paidBy,
+  ) async {
     try {
       final dbService = GetIt.I.get<DatabaseService>();
       BillModel bill = BillModel(
-          id: billid,
-          tableId: tableId,
-          title: title,
-          dateTime: _dateTime.value.millisecondsSinceEpoch ~/ 1000,
-          money: money,
-          paidBy: paidBy,
-          settledBy: _settledMembers.value);
+        id: billid,
+        tableId: tableId,
+        title: title,
+        dateTime: _dateTime.value.millisecondsSinceEpoch ~/ 1000,
+        money: money,
+        paidBy: paidBy,
+        settledBy: _settledMembers.value,
+      );
       await dbService.updateBill(bill);
       return EditBillResult(
         isSuccess: true,

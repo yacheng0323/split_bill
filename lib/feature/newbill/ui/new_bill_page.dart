@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -57,9 +55,7 @@ class _NewBillPageState extends State<NewBillPage> {
           backgroundColor: BillColors.backgroundColor,
           title: Text(
             "New Bill",
-            style: TextGetter.headline6?.copyWith(
-                color: BillColors.contentTextColor,
-                fontWeight: FontWeight.w700),
+            style: TextGetter.headline6?.copyWith(color: BillColors.contentTextColor, fontWeight: FontWeight.w700),
           ),
         ),
         body: Provider<NewBillViewModel>(create: (context) {
@@ -79,10 +75,11 @@ class _NewBillPageState extends State<NewBillPage> {
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(
-                                color: Colors.black.withOpacity(0.25),
-                                spreadRadius: 1,
-                                blurRadius: 12,
-                                offset: const Offset(0, 4))
+                              color: Colors.black.withOpacity(0.25),
+                              spreadRadius: 1,
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            ),
                           ],
                           color: Colors.white,
                         ),
@@ -109,9 +106,7 @@ class _NewBillPageState extends State<NewBillPage> {
                                 child: TextFormField(
                                   controller: titleController,
                                   onChanged: (value) {},
-                                  inputFormatters: [
-                                    LengthLimitingTextInputFormatter(20)
-                                  ],
+                                  inputFormatters: [LengthLimitingTextInputFormatter(20)],
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Please enter Title'; // Error message if the field is empty
@@ -119,16 +114,14 @@ class _NewBillPageState extends State<NewBillPage> {
                                     return null;
                                   },
                                   decoration: InputDecoration(
-                                      hintText: "Enter A Title",
-                                      hintStyle: TextGetter.bodyText1?.copyWith(
-                                          color: const Color(0xffAAAAAA)),
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 12, vertical: 7.5),
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                          borderRadius:
-                                              BorderRadius.circular(30))),
+                                    hintText: "Enter A Title",
+                                    hintStyle: TextGetter.bodyText1?.copyWith(color: const Color(0xffAAAAAA)),
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7.5),
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -152,9 +145,7 @@ class _NewBillPageState extends State<NewBillPage> {
                                 child: TextFormField(
                                   controller: dateController,
                                   onChanged: (value) {},
-                                  inputFormatters: [
-                                    LengthLimitingTextInputFormatter(20)
-                                  ],
+                                  inputFormatters: [LengthLimitingTextInputFormatter(20)],
                                   readOnly: true,
                                   onTap: () {
                                     DatePicker.showDatePicker(
@@ -163,9 +154,7 @@ class _NewBillPageState extends State<NewBillPage> {
                                       onConfirm: (date) {
                                         vm.setDateTime(date);
                                         setState(() {
-                                          dateController.text =
-                                              DateFormat("yyyy/MM/dd")
-                                                  .format(date);
+                                          dateController.text = DateFormat("yyyy/MM/dd").format(date);
                                         });
                                       },
                                     );
@@ -177,20 +166,18 @@ class _NewBillPageState extends State<NewBillPage> {
                                     return null;
                                   },
                                   decoration: InputDecoration(
-                                      suffixIcon: const Icon(
-                                        Icons.keyboard_arrow_down_rounded,
-                                        color: Color(0xffAAAAAA),
-                                      ),
-                                      hintText: "Select date",
-                                      hintStyle: TextGetter.bodyText1?.copyWith(
-                                          color: const Color(0xffAAAAAA)),
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 12, vertical: 7.5),
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                          borderRadius:
-                                              BorderRadius.circular(30))),
+                                    suffixIcon: const Icon(
+                                      Icons.keyboard_arrow_down_rounded,
+                                      color: Color(0xffAAAAAA),
+                                    ),
+                                    hintText: "Select date",
+                                    hintStyle: TextGetter.bodyText1?.copyWith(color: const Color(0xffAAAAAA)),
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7.5),
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -216,10 +203,9 @@ class _NewBillPageState extends State<NewBillPage> {
                                   onChanged: (value) {
                                     final text = amountController.text;
 
-                                    if (text.isNotEmpty &&
-                                        !text.startsWith('\$')) {
+                                    if (text.isNotEmpty && !text.startsWith('\$')) {
                                       amountController.value = TextEditingValue(
-                                        text: '\$' + text,
+                                        text: '\$$text',
                                         selection: TextSelection.fromPosition(
                                           TextPosition(offset: text.length + 1),
                                         ),
@@ -229,8 +215,7 @@ class _NewBillPageState extends State<NewBillPage> {
                                   inputFormatters: [
                                     LengthLimitingTextInputFormatter(20),
                                     FilteringTextInputFormatter.digitsOnly,
-                                    FilteringTextInputFormatter.allow(
-                                        RegExp(r'^[1-9]\d*')),
+                                    FilteringTextInputFormatter.allow(RegExp(r'^[1-9]\d*')),
                                   ],
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
@@ -240,16 +225,14 @@ class _NewBillPageState extends State<NewBillPage> {
                                   },
                                   keyboardType: TextInputType.number,
                                   decoration: InputDecoration(
-                                      hintText: "Enter The Amount",
-                                      hintStyle: TextGetter.bodyText1?.copyWith(
-                                          color: const Color(0xffAAAAAA)),
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 12, vertical: 7.5),
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                          borderRadius:
-                                              BorderRadius.circular(30))),
+                                    hintText: "Enter The Amount",
+                                    hintStyle: TextGetter.bodyText1?.copyWith(color: const Color(0xffAAAAAA)),
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7.5),
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -258,12 +241,10 @@ class _NewBillPageState extends State<NewBillPage> {
                                 builder: (context, snapshot) {
                                   final members = snapshot.data ?? [];
                                   return Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        12, 16, 12, 0),
+                                    padding: const EdgeInsets.fromLTRB(12, 16, 12, 0),
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(32.0),
+                                        borderRadius: BorderRadius.circular(32.0),
                                         gradient: const LinearGradient(
                                           stops: [0.0, 0.02, 0.1, 0.2],
                                           colors: [
@@ -279,9 +260,7 @@ class _NewBillPageState extends State<NewBillPage> {
                                       child: TextFormField(
                                         controller: paidByController,
                                         onChanged: (value) {},
-                                        inputFormatters: [
-                                          LengthLimitingTextInputFormatter(20)
-                                        ],
+                                        inputFormatters: [LengthLimitingTextInputFormatter(20)],
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
                                             return 'Please select member'; // Error message if the field is empty
@@ -299,35 +278,26 @@ class _NewBillPageState extends State<NewBillPage> {
                                                 child: Container(
                                                   alignment: Alignment.center,
                                                   child: ListView.separated(
-                                                    physics:
-                                                        const NeverScrollableScrollPhysics(),
+                                                    physics: const NeverScrollableScrollPhysics(),
                                                     shrinkWrap: true,
                                                     itemCount: members.length,
-                                                    itemBuilder:
-                                                        (context, index) {
+                                                    itemBuilder: (context, index) {
                                                       return ListTile(
                                                         title: Center(
-                                                          child: Text(
-                                                              members[index]),
+                                                          child: Text(members[index]),
                                                         ),
                                                         onTap: () {
                                                           setState(() {
-                                                            paidByController
-                                                                    .text =
-                                                                members[index];
+                                                            paidByController.text = members[index];
                                                           });
-                                                          Navigator.of(context)
-                                                              .pop();
+                                                          Navigator.of(context).pop();
                                                         },
                                                       );
                                                     },
-                                                    separatorBuilder:
-                                                        (BuildContext context,
-                                                            int index) {
+                                                    separatorBuilder: (BuildContext context, int index) {
                                                       return const Divider(
                                                         height: 1,
-                                                        color:
-                                                            Color(0xffECECEC),
+                                                        color: Color(0xffECECEC),
                                                       );
                                                     },
                                                   ),
@@ -337,23 +307,18 @@ class _NewBillPageState extends State<NewBillPage> {
                                           );
                                         },
                                         decoration: InputDecoration(
-                                            suffixIcon: const Icon(
-                                              Icons.keyboard_arrow_down_rounded,
-                                              color: Color(0xffAAAAAA),
-                                            ),
-                                            hintText: "Paid By",
-                                            hintStyle: TextGetter.bodyText1
-                                                ?.copyWith(
-                                                    color: const Color(
-                                                        0xffAAAAAA)),
-                                            contentPadding:
-                                                const EdgeInsets.symmetric(
-                                                    horizontal: 12,
-                                                    vertical: 7.5),
-                                            border: OutlineInputBorder(
-                                                borderSide: BorderSide.none,
-                                                borderRadius:
-                                                    BorderRadius.circular(30))),
+                                          suffixIcon: const Icon(
+                                            Icons.keyboard_arrow_down_rounded,
+                                            color: Color(0xffAAAAAA),
+                                          ),
+                                          hintText: "Paid By",
+                                          hintStyle: TextGetter.bodyText1?.copyWith(color: const Color(0xffAAAAAA)),
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7.5),
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius: BorderRadius.circular(30),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   );
@@ -363,12 +328,10 @@ class _NewBillPageState extends State<NewBillPage> {
                                 builder: (context, snapshot) {
                                   final members = snapshot.data ?? [];
                                   return Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        12, 16, 12, 0),
+                                    padding: const EdgeInsets.fromLTRB(12, 16, 12, 0),
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(32.0),
+                                        borderRadius: BorderRadius.circular(32.0),
                                         gradient: const LinearGradient(
                                           stops: [0.0, 0.02, 0.1, 0.2],
                                           colors: [
@@ -382,7 +345,6 @@ class _NewBillPageState extends State<NewBillPage> {
                                         ),
                                       ),
                                       child: TextFormField(
-                                        
                                         controller: settledByController,
                                         onChanged: (value) {},
                                         validator: (value) {
@@ -397,96 +359,48 @@ class _NewBillPageState extends State<NewBillPage> {
                                             context: context,
                                             expand: false,
                                             builder: (context) {
-                                              return StreamBuilder<
-                                                      List<String>>(
+                                              return StreamBuilder<List<String>>(
                                                   stream: vm.settledMembers,
                                                   builder: (context, snapshot) {
-                                                    final selectedList =
-                                                        snapshot.data ?? [];
+                                                    final selectedList = snapshot.data ?? [];
                                                     return SingleChildScrollView(
                                                       child: Container(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child:
-                                                            ListView.separated(
-                                                          physics:
-                                                              const NeverScrollableScrollPhysics(),
+                                                        alignment: Alignment.center,
+                                                        child: ListView.separated(
+                                                          physics: const NeverScrollableScrollPhysics(),
                                                           shrinkWrap: true,
-                                                          itemCount:
-                                                              members.length,
-                                                          itemBuilder:
-                                                              (context, index) {
+                                                          itemCount: members.length,
+                                                          itemBuilder: (context, index) {
                                                             return ListTile(
                                                               leading: Checkbox(
-                                                                side: BorderSide(
-                                                                    color: BillColors
-                                                                        .deepYellow),
-                                                                value: selectedList
-                                                                    .contains(
-                                                                        members[
-                                                                            index]),
-                                                                activeColor:
-                                                                    BillColors
-                                                                        .deepYellow,
-                                                                onChanged:
-                                                                    (value) {
-                                                                  vm.toggleSettledMember(
-                                                                      members[
-                                                                          index]);
+                                                                side: const BorderSide(color: BillColors.deepYellow),
+                                                                value: selectedList.contains(members[index]),
+                                                                activeColor: BillColors.deepYellow,
+                                                                onChanged: (value) {
+                                                                  vm.toggleSettledMember(members[index]);
                                                                   setState(() {
-                                                                    settledByController
-                                                                        .text = vm
-                                                                            .settledMembers
-                                                                            .value
-                                                                            .isEmpty
-                                                                        ? ""
-                                                                        : vm.settledMembers
-                                                                            .value
-                                                                            .map((e) =>
-                                                                                e)
-                                                                            .toString();
+                                                                    settledByController.text = vm.settledMembers.value.isEmpty ? "" : vm.settledMembers.value.map((e) => e).toString();
                                                                   });
                                                                 },
                                                               ),
-                                                              title: Transform
-                                                                  .translate(
-                                                                offset:
-                                                                    const Offset(
-                                                                        -32, 0),
+                                                              title: Transform.translate(
+                                                                offset: const Offset(-32, 0),
                                                                 child: Center(
-                                                                  child: Text(
-                                                                      members[
-                                                                          index]),
+                                                                  child: Text(members[index]),
                                                                 ),
                                                               ),
                                                               onTap: () {
-                                                                vm.toggleSettledMember(
-                                                                    members[
-                                                                        index]);
+                                                                vm.toggleSettledMember(members[index]);
                                                                 setState(() {
-                                                                  settledByController
-                                                                      .text = vm
-                                                                          .settledMembers
-                                                                          .value
-                                                                          .isEmpty
-                                                                      ? ""
-                                                                      : vm.settledMembers
-                                                                          .value
-                                                                          .map((e) =>
-                                                                              "$e")
-                                                                          .toString();
+                                                                  settledByController.text = vm.settledMembers.value.isEmpty ? "" : vm.settledMembers.value.map((e) => e).toString();
                                                                 });
                                                               },
                                                             );
                                                           },
-                                                          separatorBuilder:
-                                                              (BuildContext
-                                                                      context,
-                                                                  int index) {
+                                                          separatorBuilder: (BuildContext context, int index) {
                                                             return const Divider(
                                                               height: 1,
-                                                              color: Color(
-                                                                  0xffECECEC),
+                                                              color: Color(0xffECECEC),
                                                             );
                                                           },
                                                         ),
@@ -498,48 +412,42 @@ class _NewBillPageState extends State<NewBillPage> {
                                         },
                                         readOnly: true,
                                         decoration: InputDecoration(
-                                            suffixIcon: const Icon(
-                                              Icons
-                                                  .keyboard_arrow_right_rounded,
-                                              color: Color(0xffAAAAAA),
-                                            ),
-                                            hintText: "Settled By",
-                                            hintStyle: TextGetter.bodyText1
-                                                ?.copyWith(
-                                                    color: const Color(
-                                                        0xffAAAAAA)),
-                                            contentPadding:
-                                                const EdgeInsets.symmetric(
-                                                    horizontal: 12,
-                                                    vertical: 7.5),
-                                            border: OutlineInputBorder(
-                                                borderSide: BorderSide.none,
-                                                borderRadius:
-                                                    BorderRadius.circular(30))),
+                                          suffixIcon: const Icon(
+                                            Icons.keyboard_arrow_right_rounded,
+                                            color: Color(0xffAAAAAA),
+                                          ),
+                                          hintText: "Settled By",
+                                          hintStyle: TextGetter.bodyText1?.copyWith(color: const Color(0xffAAAAAA)),
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7.5),
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius: BorderRadius.circular(30),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   );
                                 }),
                             Container(
-                              padding:
-                                  const EdgeInsets.fromLTRB(12, 64, 12, 32),
+                              padding: const EdgeInsets.fromLTRB(12, 64, 12, 32),
                               child: Row(
                                 children: [
                                   Expanded(
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              BillColors.lightYellow,
-                                          elevation: 4,
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 53, vertical: 10)),
+                                        backgroundColor: BillColors.lightYellow,
+                                        elevation: 4,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 53,
+                                          vertical: 10,
+                                        ),
+                                      ),
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
                                       child: Text(
                                         "Cancel",
-                                        style: TextGetter.bodyText1?.copyWith(
-                                            color: BillColors.contentTextColor),
+                                        style: TextGetter.bodyText1?.copyWith(color: BillColors.contentTextColor),
                                       ),
                                     ),
                                   ),
@@ -551,51 +459,28 @@ class _NewBillPageState extends State<NewBillPage> {
                                         return Expanded(
                                           child: ElevatedButton(
                                             style: ElevatedButton.styleFrom(
-                                                backgroundColor:
-                                                    BillColors.deepYellow,
-                                                elevation: 4,
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 53,
-                                                        vertical: 10)),
+                                              backgroundColor: BillColors.deepYellow,
+                                              elevation: 4,
+                                              padding: const EdgeInsets.symmetric(horizontal: 53, vertical: 10),
+                                            ),
                                             onPressed: () async {
-                                              if (formKey.currentState
-                                                      ?.validate() ==
-                                                  true) {
-                                                double money = double.parse(
-                                                    amountController.text
-                                                        .replaceFirst(
-                                                            "\$", ""));
-                                                final result = await vm.addBill(
-                                                    tableId: widget.tableId,
-                                                    title: titleController.text,
-                                                    money: money,
-                                                    paidBy:
-                                                        paidByController.text);
+                                              if (formKey.currentState?.validate() == true) {
+                                                double money = double.parse(amountController.text.replaceFirst("\$", ""));
+                                                final result = await vm.addBill(tableId: widget.tableId, title: titleController.text, money: money, paidBy: paidByController.text);
                                                 if (result.isSuccess) {
-                                                  // await viewModel.initData();
-                                                  ShowSnackBarHelper
-                                                          .successSnackBar(
-                                                              context: context)
-                                                      .showSnackbar(
-                                                          "New Bill Success");
-                                                  Navigator.of(context)
-                                                      .pop(true);
+                                                  // ignore: use_build_context_synchronously
+                                                  ShowSnackBarHelper.successSnackBar(context: context).showSnackbar("New Bill Success");
+                                                  // ignore: use_build_context_synchronously
+                                                  Navigator.of(context).pop(true);
                                                 } else {
-                                                  ShowSnackBarHelper
-                                                          .errorSnackBar(
-                                                              context: context)
-                                                      .showSnackbar(
-                                                          result.errorMessage ??
-                                                              "");
+                                                  // ignore: use_build_context_synchronously
+                                                  ShowSnackBarHelper.errorSnackBar(context: context).showSnackbar(result.errorMessage ?? "");
                                                 }
                                               }
                                             },
                                             child: Text(
                                               "Add",
-                                              style: TextGetter.bodyText1
-                                                  ?.copyWith(
-                                                      color: Colors.white),
+                                              style: TextGetter.bodyText1?.copyWith(color: Colors.white),
                                             ),
                                           ),
                                         );

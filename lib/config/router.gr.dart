@@ -120,8 +120,7 @@ class EditBillRoute extends _i8.PageRouteInfo<EditBillRouteArgs> {
 
   static const String name = 'EditBillRoute';
 
-  static const _i8.PageInfo<EditBillRouteArgs> page =
-      _i8.PageInfo<EditBillRouteArgs>(name);
+  static const _i8.PageInfo<EditBillRouteArgs> page = _i8.PageInfo<EditBillRouteArgs>(name);
 }
 
 class EditBillRouteArgs {
@@ -175,8 +174,7 @@ class InitMemberRoute extends _i8.PageRouteInfo<InitMemberRouteArgs> {
 
   static const String name = 'InitMemberRoute';
 
-  static const _i8.PageInfo<InitMemberRouteArgs> page =
-      _i8.PageInfo<InitMemberRouteArgs>(name);
+  static const _i8.PageInfo<InitMemberRouteArgs> page = _i8.PageInfo<InitMemberRouteArgs>(name);
 }
 
 class InitMemberRouteArgs {
@@ -213,8 +211,7 @@ class NewBillRoute extends _i8.PageRouteInfo<NewBillRouteArgs> {
 
   static const String name = 'NewBillRoute';
 
-  static const _i8.PageInfo<NewBillRouteArgs> page =
-      _i8.PageInfo<NewBillRouteArgs>(name);
+  static const _i8.PageInfo<NewBillRouteArgs> page = _i8.PageInfo<NewBillRouteArgs>(name);
 }
 
 class NewBillRouteArgs {
@@ -265,8 +262,7 @@ class NewMemberRoute extends _i8.PageRouteInfo<NewMemberRouteArgs> {
 
   static const String name = 'NewMemberRoute';
 
-  static const _i8.PageInfo<NewMemberRouteArgs> page =
-      _i8.PageInfo<NewMemberRouteArgs>(name);
+  static const _i8.PageInfo<NewMemberRouteArgs> page = _i8.PageInfo<NewMemberRouteArgs>(name);
 }
 
 class NewMemberRouteArgs {

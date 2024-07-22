@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:split_bill/core/ui/color.dart';
+import 'package:split_bill/core/ui/show_snack_bar.dart';
 import 'package:split_bill/core/ui/textstyle.dart';
 import 'package:split_bill/feature/billhome/domain/bill_home_view_model.dart';
 
@@ -11,7 +12,6 @@ import 'package:split_bill/feature/newgroup/domain/new_group_view_model.dart';
 @RoutePage()
 class NewGroupPage extends StatefulWidget {
   const NewGroupPage({super.key});
-
 
   @override
   State<NewGroupPage> createState() => _NewGroupPageState();
@@ -45,9 +45,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
                         backgroundColor: BillColors.backgroundColor,
                         title: Text(
                           "New Group",
-                          style: TextGetter.headline6?.copyWith(
-                              color: BillColors.contentTextColor,
-                              fontWeight: FontWeight.w700),
+                          style: TextGetter.headline6?.copyWith(color: BillColors.contentTextColor, fontWeight: FontWeight.w700),
                         ),
                       ),
                       body: SingleChildScrollView(
@@ -55,12 +53,13 @@ class _NewGroupPageState extends State<NewGroupPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              padding: EdgeInsets.fromLTRB(32, 32, 0, 0),
+                              padding: const EdgeInsets.fromLTRB(32, 32, 0, 0),
                               child: Text(
                                 "Group Name",
                                 style: TextGetter.botton?.copyWith(
-                                    color: BillColors.contentTextColor,
-                                    fontWeight: FontWeight.w700),
+                                  color: BillColors.contentTextColor,
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
                             ),
                             Container(
@@ -69,10 +68,11 @@ class _NewGroupPageState extends State<NewGroupPage> {
                                 borderRadius: BorderRadius.circular(10),
                                 boxShadow: [
                                   BoxShadow(
-                                      color: Colors.black.withOpacity(0.25),
-                                      spreadRadius: 1,
-                                      blurRadius: 12,
-                                      offset: const Offset(0, 4))
+                                    color: Colors.black.withOpacity(0.25),
+                                    spreadRadius: 1,
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 4),
+                                  ),
                                 ],
                                 color: Colors.white,
                               ),
@@ -80,12 +80,10 @@ class _NewGroupPageState extends State<NewGroupPage> {
                               child: Column(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        12, 32, 12, 32),
+                                    padding: const EdgeInsets.fromLTRB(12, 32, 12, 32),
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(32.0),
+                                        borderRadius: BorderRadius.circular(32.0),
                                         gradient: const LinearGradient(
                                           stops: [0.0, 0.02, 0.1, 0.2],
                                           colors: [
@@ -105,23 +103,16 @@ class _NewGroupPageState extends State<NewGroupPage> {
                                           });
                                         },
                                         controller: groupNameController,
-                                        inputFormatters: [
-                                          LengthLimitingTextInputFormatter(20)
-                                        ],
+                                        inputFormatters: [LengthLimitingTextInputFormatter(20)],
                                         decoration: InputDecoration(
-                                            hintText: "Enter A Group Name",
-                                            hintStyle: TextGetter.bodyText1
-                                                ?.copyWith(
-                                                    color: const Color(
-                                                        0xffAAAAAA)),
-                                            contentPadding:
-                                                const EdgeInsets.symmetric(
-                                                    horizontal: 12,
-                                                    vertical: 7.5),
-                                            border: OutlineInputBorder(
-                                                borderSide: BorderSide.none,
-                                                borderRadius:
-                                                    BorderRadius.circular(30))),
+                                          hintText: "Enter A Group Name",
+                                          hintStyle: TextGetter.bodyText1?.copyWith(color: const Color(0xffAAAAAA)),
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7.5),
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius: BorderRadius.circular(30),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -129,12 +120,10 @@ class _NewGroupPageState extends State<NewGroupPage> {
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.fromLTRB(32, 24, 0, 0),
+                              padding: const EdgeInsets.fromLTRB(32, 24, 0, 0),
                               child: Text(
                                 "Members",
-                                style: TextGetter.botton?.copyWith(
-                                    color: BillColors.contentTextColor,
-                                    fontWeight: FontWeight.w700),
+                                style: TextGetter.botton?.copyWith(color: BillColors.contentTextColor, fontWeight: FontWeight.w700),
                               ),
                             ),
                             Container(
@@ -143,10 +132,11 @@ class _NewGroupPageState extends State<NewGroupPage> {
                                 borderRadius: BorderRadius.circular(10),
                                 boxShadow: [
                                   BoxShadow(
-                                      color: Colors.black.withOpacity(0.25),
-                                      spreadRadius: 1,
-                                      blurRadius: 12,
-                                      offset: const Offset(0, 4))
+                                    color: Colors.black.withOpacity(0.25),
+                                    spreadRadius: 1,
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 4),
+                                  ),
                                 ],
                                 color: Colors.white,
                               ),
@@ -154,12 +144,10 @@ class _NewGroupPageState extends State<NewGroupPage> {
                               child: Column(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        12, 32, 12, 0),
+                                    padding: const EdgeInsets.fromLTRB(12, 32, 12, 0),
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(32.0),
+                                        borderRadius: BorderRadius.circular(32.0),
                                         gradient: const LinearGradient(
                                           stops: [0.0, 0.02, 0.1, 0.2],
                                           colors: [
@@ -179,52 +167,40 @@ class _NewGroupPageState extends State<NewGroupPage> {
                                           });
                                         },
                                         controller: memberNameController,
-                                        inputFormatters: [
-                                          LengthLimitingTextInputFormatter(30)
-                                        ],
+                                        inputFormatters: [LengthLimitingTextInputFormatter(30)],
                                         decoration: InputDecoration(
-                                            hintText: "Enter A Member Name",
-                                            hintStyle: TextGetter.bodyText1
-                                                ?.copyWith(
-                                                    color: const Color(
-                                                        0xffAAAAAA)),
-                                            contentPadding:
-                                                const EdgeInsets.symmetric(
-                                                    horizontal: 12,
-                                                    vertical: 7.5),
-                                            border: OutlineInputBorder(
-                                                borderSide: BorderSide.none,
-                                                borderRadius:
-                                                    BorderRadius.circular(30))),
+                                          hintText: "Enter A Member Name",
+                                          hintStyle: TextGetter.bodyText1?.copyWith(color: const Color(0xffAAAAAA)),
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7.5),
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius: BorderRadius.circular(30),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
                                   Container(
                                     alignment: Alignment.centerRight,
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 8, 12, 32),
+                                    padding: const EdgeInsets.fromLTRB(0, 8, 12, 32),
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 24, vertical: 4),
-                                          backgroundColor:
-                                              BillColors.deepYellow,
-                                          elevation: 4),
-                                      onPressed: memberNameController
-                                              .text.isEmpty
+                                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+                                        backgroundColor: BillColors.deepYellow,
+                                        elevation: 4,
+                                      ),
+                                      onPressed: memberNameController.text.isEmpty
                                           ? null
                                           : () {
-                                              vm.addMember(
-                                                  memberNameController.text);
-                
+                                              vm.addMember(memberNameController.text);
+
                                               setState(() {
                                                 memberNameController.text = "";
                                               });
                                             },
                                       child: Text(
                                         "Add",
-                                        style: TextGetter.headline6
-                                            ?.copyWith(color: Colors.white),
+                                        style: TextGetter.headline6?.copyWith(color: Colors.white),
                                       ),
                                     ),
                                   ),
@@ -233,18 +209,14 @@ class _NewGroupPageState extends State<NewGroupPage> {
                                     padding: const EdgeInsets.only(bottom: 24),
                                     child: ListView.builder(
                                       shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
+                                      physics: const NeverScrollableScrollPhysics(),
                                       itemBuilder: (context, index) {
                                         return Container(
-                                          margin: const EdgeInsets.fromLTRB(
-                                              12, 8, 12, 0),
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 12, vertical: 12),
+                                          margin: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                           decoration: BoxDecoration(
                                             color: BillColors.lightYellow,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(10),
                                           ),
                                           child: Row(
                                             children: [
@@ -256,11 +228,9 @@ class _NewGroupPageState extends State<NewGroupPage> {
                                                 child: IconButton(
                                                     padding: EdgeInsets.zero,
                                                     onPressed: () {
-                                                      vm.removeMember(
-                                                          members[index]);
+                                                      vm.removeMember(members[index]);
                                                     },
-                                                    icon: const Icon(
-                                                        Icons.clear)),
+                                                    icon: const Icon(Icons.clear)),
                                               ),
                                             ],
                                           ),
@@ -282,17 +252,16 @@ class _NewGroupPageState extends State<NewGroupPage> {
                             Expanded(
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 53, vertical: 10),
-                                    backgroundColor: BillColors.lightYellow,
-                                    elevation: 4),
+                                  padding: const EdgeInsets.symmetric(horizontal: 53, vertical: 10),
+                                  backgroundColor: BillColors.lightYellow,
+                                  elevation: 4,
+                                ),
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
                                 child: Text(
                                   "Cancel",
-                                  style: TextGetter.headline6?.copyWith(
-                                      color: BillColors.contentTextColor),
+                                  style: TextGetter.headline6?.copyWith(color: BillColors.contentTextColor),
                                 ),
                               ),
                             ),
@@ -304,26 +273,27 @@ class _NewGroupPageState extends State<NewGroupPage> {
                                   return Expanded(
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 53, vertical: 10),
-                                          backgroundColor:
-                                              BillColors.deepYellow,
-                                          elevation: 4),
-                                      onPressed: (members.length >= 2 &&
-                                              groupNameController
-                                                  .text.isNotEmpty)
+                                        padding: const EdgeInsets.symmetric(horizontal: 53, vertical: 10),
+                                        backgroundColor: BillColors.deepYellow,
+                                        elevation: 4,
+                                      ),
+                                      onPressed: (members.length >= 2 && groupNameController.text.isNotEmpty)
                                           ? () async {
-                                              await vm.submit(
-                                                  groupNameController.text);
-                                              await viewModel.initData();
-
-                                              Navigator.of(context).pop(true);
+                                              final result = await vm.submit(groupNameController.text);
+                                              if (result.isSuccess) {
+                                                // ignore: use_build_context_synchronously
+                                                ShowSnackBarHelper.successSnackBar(context: context).showSnackbar("Group added successfully");
+                                                // ignore: use_build_context_synchronously
+                                                Navigator.of(context).pop(true);
+                                              } else {
+                                                // ignore: use_build_context_synchronously
+                                                ShowSnackBarHelper.errorSnackBar(context: context).showSnackbar("Failed to add group");
+                                              }
                                             }
                                           : null,
                                       child: Text(
                                         "Submit",
-                                        style: TextGetter.headline6
-                                            ?.copyWith(color: Colors.white),
+                                        style: TextGetter.headline6?.copyWith(color: Colors.white),
                                       ),
                                     ),
                                   );

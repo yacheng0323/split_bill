@@ -22,11 +22,7 @@ class InitMemberViewModel {
 
   Future<void> submit(String billTitle) async {
     final dbService = GetIt.I.get<DatabaseService>();
-    final tableId = await dbService
-        .createTableAndReturnId(GroupTableModel(name: billTitle));
+    final tableId = await dbService.createTableAndReturnId(GroupTableModel(name: billTitle));
     await dbService.insertTableMembers(tableId, _members.value);
-
-    List<String> insertedMembers = await dbService.getTableMembers(tableId);
-    print(insertedMembers);
   }
 }
