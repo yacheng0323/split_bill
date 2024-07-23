@@ -263,7 +263,7 @@ class _BillHomePageState extends State<BillHomePage> with SingleTickerProviderSt
                                                           TextStyle? textStyle = TextGetter.bodyText1;
                                                           return GestureDetector(
                                                             onTap: () {
-                                                              AutoRouter.of(context).push(EditBillRoute(billModel: item, tableId: item.id ?? 0)).then((value) async {
+                                                              AutoRouter.of(context).push(EditBillRoute(billModel: item, tableId: item.tableId ?? 0)).then((value) async {
                                                                 if (value == true) {
                                                                   await vm.initData();
                                                                 }

@@ -216,28 +216,6 @@ class _InitMemberPageState extends State<InitMemberPage> {
                                   ),
                                 ),
                           const Padding(padding: EdgeInsets.fromLTRB(0, 114, 0, 0)),
-                          members.length >= 2
-                              ? Container(
-                                  margin: const EdgeInsets.fromLTRB(0, 0, 0, 56),
-                                  width: MediaQuery.of(context).size.width,
-                                  padding: const EdgeInsets.symmetric(horizontal: 88),
-                                  child: ElevatedButton(
-                                    onPressed: () async {
-                                      await vm.submit(widget.billTitle);
-                                      // ignore: use_build_context_synchronously
-                                      AutoRouter.of(context).replaceAll([const BillHomeRoute()]);
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      elevation: 6,
-                                      backgroundColor: BillColors.deepYellow,
-                                    ),
-                                    child: Text(
-                                      "Start",
-                                      style: TextGetter.headline6?.copyWith(color: Colors.white),
-                                    ),
-                                  ),
-                                )
-                              : const SizedBox.shrink()
                         ],
                       ),
                     );
@@ -245,6 +223,42 @@ class _InitMemberPageState extends State<InitMemberPage> {
             },
           );
         },
+      ),
+      bottomNavigationBar: Provider(
+        create: (context) => initMemberViewModel,
+        child: Consumer<InitMemberViewModel>(
+          builder: (context, value, child) {
+            return StreamBuilder<List<String>>(
+              stream: value.members,
+              builder: (context, snapshot) {
+                final members = snapshot.data ?? [];
+                return members.length < 2
+                    ? const SizedBox.shrink()
+                    : SafeArea(
+                        child: Container(
+                          padding: const EdgeInsets.fromLTRB(32, 0, 32, 0),
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              await value.submit(widget.billTitle);
+                              // ignore: use_build_context_synchronously
+                              AutoRouter.of(context).replaceAll([const BillHomeRoute()]);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              elevation: 6,
+                              padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 10),
+                              backgroundColor: BillColors.deepYellow,
+                            ),
+                            child: Text(
+                              "Start",
+                              style: TextGetter.headline6?.copyWith(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      );
+              },
+            );
+          },
+        ),
       ),
     );
   }
