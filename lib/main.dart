@@ -22,7 +22,7 @@ class _SplitBillAppState extends State<SplitBillApp> {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       routerConfig: appRouter.config(),
-      title: 'Flutter Demo',
+      title: "Split Bill",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
