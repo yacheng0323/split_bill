@@ -1,31 +1,49 @@
 import 'package:get_it/get_it.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/subjects.dart';
-import 'package:split_bill/core/database/database_service.dart';
+import 'package:split_bill/core/repositories/database_service.dart';
 import 'package:split_bill/entities/result/insert_member_result.dart';
 
-class NewMemberViewModel {
-  final _result = BehaviorSubject<InsertMemberResult?>.seeded(null);
+part 'new_member_view_model.g.dart';
 
-  InsertMemberResult? get result => _result.value;
+class NewMemberState {
+  final List<String>? members;
+  final InsertMemberResult? result;
 
-  final _members = BehaviorSubject<List<String>?>.seeded(null);
+  NewMemberState({this.members, this.result});
 
-  List<String>? get members => _members.value;
+  NewMemberState copyWith({List<String>? members, InsertMemberResult? result}) {
+    return NewMemberState(
+      members: members ?? this.members,
+      result: result ?? this.result,
+    );
+  }
+}
+
+@riverpod
+class NewMemberViewModel extends _$NewMemberViewModel {
+  @override
+  Future<NewMemberState> build() async {
+    return NewMemberState();
+  }
 
   Future<void> getMembers(int tableId) async {
-    final dbService = GetIt.I.get<DatabaseService>();
-    _members.add(await dbService.getTableMembers(tableId));
+    final dbService = ref.read(databaseServiceProvider.notifier);
+    final members = await dbService.getTableMembers(tableId);
+    state = AsyncValue.data(state.value!.copyWith(members: members));
   }
 
   Future<void> addMember(int tableId, String member) async {
     try {
-      final dbService = GetIt.I.get<DatabaseService>();
+      final dbService = ref.read(databaseServiceProvider.notifier);
       await dbService.insertTableMembers(tableId, [member]);
-      _result.add(InsertMemberResult(isSuccess: true));
+      state = AsyncValue.data(
+          state.value!.copyWith(result: InsertMemberResult(isSuccess: true)));
     } catch (e) {
-      _result.add(
-        InsertMemberResult(isSuccess: false, errorMessags: "Failed to add member. Please try again later."),
-      );
+      state = AsyncValue.data(state.value!.copyWith(
+          result: InsertMemberResult(
+              isSuccess: false,
+              errorMessags: "Failed to add member. Please try again later.")));
     }
   }
 }

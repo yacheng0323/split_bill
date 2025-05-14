@@ -1,65 +1,86 @@
 import 'package:get_it/get_it.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/streams.dart';
 import 'package:rxdart/subjects.dart';
-import 'package:split_bill/core/database/database_service.dart';
+import 'package:split_bill/core/repositories/database_service.dart';
 import 'package:split_bill/entities/bill_model.dart';
 import 'package:split_bill/entities/result/new_bill_result.dart';
 
-class NewBillViewModel {
-  final _members = BehaviorSubject<List<String>?>.seeded(null);
+part 'new_bill_view_model.g.dart';
 
-  ValueStream<List<String>?> get members => _members;
+class NewBillState {
+  final List<String>? members;
+  final List<String>? settledMembers;
+  final DateTime? dateTime;
+  final NewBillResult? result;
 
-  final _settledMembers = BehaviorSubject<List<String>>.seeded([]);
+  NewBillState({this.members, this.settledMembers, this.dateTime, this.result});
 
-  ValueStream<List<String>> get settledMembers => _settledMembers;
+  NewBillState copyWith(
+      {List<String>? members,
+      List<String>? settledMembers,
+      DateTime? dateTime,
+      NewBillResult? result}) {
+    return NewBillState(
+        members: members ?? this.members,
+        settledMembers: settledMembers ?? this.settledMembers,
+        dateTime: dateTime ?? this.dateTime,
+        result: result ?? this.result);
+  }
+}
 
-  final _dateTime = BehaviorSubject<DateTime>.seeded(DateTime.now());
-
-  DateTime get dateTime => _dateTime.value;
+@riverpod
+class NewBillViewModel extends _$NewBillViewModel {
+  @override
+  Future<NewBillState> build() async {
+    return NewBillState();
+  }
 
   Future<void> init(int tableId) async {
-    final dbService = GetIt.I.get<DatabaseService>();
+    final dbService = ref.watch(databaseServiceProvider.notifier);
 
     List<String> memberList = await dbService.getTableMembers(tableId);
-    _members.add(memberList);
+    state = AsyncValue.data(state.value!.copyWith(members: memberList));
   }
 
   void toggleSettledMember(String name) async {
-    final list = _settledMembers.value;
+    final list = state.value!.settledMembers ?? [];
     if (list.contains(name)) {
       list.remove(name);
     } else {
       list.add(name);
     }
-    _settledMembers.add(List.from(list));
+    state = AsyncValue.data(state.value!.copyWith(settledMembers: list));
   }
 
   void setDateTime(DateTime date) {
-    _dateTime.add(date);
+    state = AsyncValue.data(state.value!.copyWith(dateTime: date));
   }
 
-  Future<NewBillResult> addBill({
+  Future<void> addBill({
     required int tableId,
     required String title,
     required double money,
     required String paidBy,
   }) async {
     try {
-      final dbService = GetIt.I.get<DatabaseService>();
+      final dbService = ref.watch(databaseServiceProvider.notifier);
       await dbService.insertBill(
         BillModel(
           title: title,
-          dateTime: (_dateTime.value.millisecondsSinceEpoch ~/ 1000),
+          dateTime: (state.value!.dateTime!.millisecondsSinceEpoch ~/ 1000),
           tableId: tableId,
           money: money,
           paidBy: paidBy,
-          settledBy: _settledMembers.value,
+          settledBy: state.value!.settledMembers ?? [],
         ),
       );
-      return NewBillResult(isSuccess: true);
+      state = AsyncValue.data(
+          state.value!.copyWith(result: NewBillResult(isSuccess: true)));
     } catch (e) {
-      return NewBillResult(isSuccess: false, errorMessage: "$e");
+      // return NewBillResult(isSuccess: false, errorMessage: "$e");
+      state = AsyncValue.data(state.value!.copyWith(
+          result: NewBillResult(isSuccess: false, errorMessage: "$e")));
     }
   }
 }

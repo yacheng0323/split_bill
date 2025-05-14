@@ -1,43 +1,65 @@
 import 'package:get_it/get_it.dart';
-import 'package:rxdart/streams.dart';
-import 'package:rxdart/subjects.dart';
-import 'package:split_bill/core/database/database_service.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:split_bill/core/repositories/database_service.dart';
 import 'package:split_bill/entities/bill_model.dart';
 import 'package:split_bill/entities/result/edit_bill_result.dart';
 
-class EditBillViewModel {
-  final _members = BehaviorSubject<List<String>?>.seeded(null);
+part 'edit_bill_view_model.g.dart';
 
-  ValueStream<List<String>?> get members => _members;
+class EditBillState {
+  final List<String>? members;
+  final List<String>? settledMembers;
+  final DateTime? dateTime;
 
-  final _settledMembers = BehaviorSubject<List<String>>.seeded([]);
+  EditBillState({
+    this.members,
+    this.settledMembers,
+    this.dateTime,
+  });
 
-  ValueStream<List<String>> get settledMembers => _settledMembers;
+  EditBillState copyWith({
+    List<String>? members,
+    List<String>? settledMembers,
+    DateTime? dateTime,
+  }) {
+    return EditBillState(
+      members: members ?? this.members,
+      settledMembers: settledMembers ?? this.settledMembers,
+      dateTime: dateTime ?? this.dateTime,
+    );
+  }
+}
 
-  final _dateTime = BehaviorSubject<DateTime>.seeded(DateTime.now());
-
-  DateTime get dateTime => _dateTime.value;
-
-  Future<void> init(int tableId, List<String> settledMembers) async {
-    final dbService = GetIt.I.get<DatabaseService>();
-
-    List<String> memberList = await dbService.getTableMembers(tableId);
-    _settledMembers.add(settledMembers);
-    _members.add(memberList);
+@riverpod
+class EditBillViewModel extends _$EditBillViewModel {
+  @override
+  Future<EditBillState> build() async {
+    return EditBillState();
   }
 
-  void toggleSettledMember(String name) async {
-    final list = _settledMembers.value;
+  Future<void> init(int tableId, List<String> settledMembers) async {
+    try {
+      final dbService = ref.read(databaseServiceProvider.notifier);
+      final List<String> memberList = await dbService.getTableMembers(tableId);
+      state = AsyncValue.data(state.value!
+          .copyWith(members: memberList, settledMembers: settledMembers));
+    } catch (e, s) {
+      state = AsyncError(e, s);
+    }
+  }
+
+  void toggleMember(String name) async {
+    final list = state.value!.settledMembers ?? [];
     if (list.contains(name)) {
       list.remove(name);
     } else {
       list.add(name);
     }
-    _settledMembers.add(List.from(list));
+    state = AsyncValue.data(state.value!.copyWith(settledMembers: list));
   }
 
   void setDateTime(DateTime date) {
-    _dateTime.add(date);
+    state = AsyncValue.data(state.value!.copyWith(dateTime: date));
   }
 
   Future<EditBillResult> updateBill(
@@ -48,20 +70,18 @@ class EditBillViewModel {
     String paidBy,
   ) async {
     try {
-      final dbService = GetIt.I.get<DatabaseService>();
+      final dbService = ref.read(databaseServiceProvider.notifier);
       BillModel bill = BillModel(
         id: billid,
         tableId: tableId,
         title: title,
-        dateTime: _dateTime.value.millisecondsSinceEpoch ~/ 1000,
+        dateTime: state.value!.dateTime!.millisecondsSinceEpoch ~/ 1000,
         money: money,
         paidBy: paidBy,
-        settledBy: _settledMembers.value,
+        settledBy: state.value!.settledMembers ?? [],
       );
       await dbService.updateBill(bill);
-      return EditBillResult(
-        isSuccess: true,
-      );
+      return EditBillResult(isSuccess: true);
     } catch (e) {
       return EditBillResult(isSuccess: false, errorMessags: "$e");
     }

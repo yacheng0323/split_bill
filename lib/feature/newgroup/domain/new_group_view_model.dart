@@ -1,34 +1,57 @@
 import 'package:get_it/get_it.dart';
-import 'package:rxdart/subjects.dart';
-import 'package:split_bill/core/database/database_service.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:split_bill/core/repositories/database_service.dart';
 import 'package:split_bill/entities/group_table_model.dart';
 import 'package:split_bill/entities/result/new_group_result.dart';
 
-class NewGroupViewModel {
-  final _members = BehaviorSubject<List<String>>.seeded([]);
+part 'new_group_view_model.g.dart';
 
-  Stream<List<String>> get members => _members;
+class NewGroupState {
+  final List<String>? members;
+  final NewGroupResult? result;
+
+  NewGroupState({this.members, this.result});
+
+  NewGroupState copyWith({List<String>? members, NewGroupResult? result}) {
+    return NewGroupState(
+      members: members ?? this.members,
+      result: result ?? this.result,
+    );
+  }
+}
+
+@Riverpod(keepAlive: true)
+class NewGroupViewModel extends _$NewGroupViewModel {
+  DatabaseService get _dbService => ref.read(databaseServiceProvider.notifier);
+
+  @override
+  NewGroupState build() {
+    return NewGroupState();
+  }
 
   void addMember(String name) {
-    final list = _members.value;
-    list.add(name);
-    _members.add(List.from(list));
+    if (name.trim().isEmpty) return;
+    if (state.members?.contains(name) ?? false) return;
+
+    state = state.copyWith(
+      members: [...state.members ?? [], name],
+    );
   }
 
   void removeMember(String name) {
-    final list = _members.value;
-    list.remove(name);
-    _members.add(List.from(list));
+    state = state.copyWith(
+        members: state.members?.where((test) => test != name).toList());
   }
 
-  Future<NewGroupResult> submit(String title) async {
+  Future<void> submit(String title) async {
     try {
-      final dbService = GetIt.I.get<DatabaseService>();
-      final tableId = await dbService.createTableAndReturnId(GroupTableModel(name: title));
-      await dbService.insertTableMembers(tableId, _members.value);
-      return NewGroupResult(isSuccess: true);
+      final tableId =
+          await _dbService.createTableAndReturnId(GroupTableModel(name: title));
+      await _dbService.insertTableMembers(tableId, state.members ?? []);
+      state = state.copyWith(result: NewGroupResult(isSuccess: true));
     } catch (e) {
-      return NewGroupResult(isSuccess: false, errorMessage: "$e");
+      state = state.copyWith(
+          result: NewGroupResult(isSuccess: false, errorMessage: e.toString()));
     }
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_bill/config/injections.dart';
+import 'package:split_bill/config/router.dart';
 import 'config/router.dart' as router;
 
 Future<void> main() async {
@@ -8,20 +10,22 @@ Future<void> main() async {
   runApp(const SplitBillApp());
 }
 
-class SplitBillApp extends StatefulWidget {
+class SplitBillApp extends ConsumerStatefulWidget {
   const SplitBillApp({super.key});
 
   @override
-  State<SplitBillApp> createState() => _SplitBillAppState();
+  ConsumerState<SplitBillApp> createState() => _SplitBillAppState();
 }
 
-class _SplitBillAppState extends State<SplitBillApp> {
-  router.Router appRouter = router.Router();
+class _SplitBillAppState extends ConsumerState<SplitBillApp> {
+  // router.Router appRouter = router.Router();
 
   @override
   Widget build(BuildContext context) {
+    final router = ref.watch(goRouterProvider);
     return MaterialApp.router(
-      routerConfig: appRouter.config(),
+      // routerConfig: appRouter.config,
+      routerConfig: router,
       title: "Split Bill",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

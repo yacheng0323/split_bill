@@ -1,45 +1,61 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:rxdart/streams.dart';
-import 'package:rxdart/subjects.dart';
-import 'package:split_bill/core/database/database_service.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:split_bill/core/repositories/database_service.dart';
 import 'package:split_bill/entities/bill_model.dart';
 import 'package:split_bill/entities/debt_model.dart';
 import 'package:split_bill/entities/group_table_model.dart';
 import 'package:split_bill/entities/result/delete_group_result.dart';
 import 'package:split_bill/entities/result/update_group_result.dart';
 
-class BillHomeViewModel {
-  final _groupTables = BehaviorSubject<List<GroupTableModel>?>.seeded(null);
+part 'bill_home_view_model.g.dart';
 
-  ValueStream<List<GroupTableModel>?> get groupTables => _groupTables.stream;
+class BillHomeState {
+  final List<GroupTableModel>? groupTables;
+  final int? selectedTableId;
+  final List<BillModel>? bills;
+  final List<DebtModel>? debts;
 
-  final _tableId = BehaviorSubject<int?>.seeded(null);
+  BillHomeState({
+    this.groupTables,
+    this.selectedTableId,
+    this.bills,
+    this.debts,
+  });
 
-  int? get tableId => _tableId.value;
+  BillHomeState copyWith({
+    List<GroupTableModel>? groupTables,
+    int? selectedTableId,
+    List<BillModel>? bills,
+    List<DebtModel>? debts,
+  }) {
+    return BillHomeState(
+      groupTables: groupTables ?? this.groupTables,
+      selectedTableId: selectedTableId ?? this.selectedTableId,
+      bills: bills ?? this.bills,
+      debts: debts ?? this.debts,
+    );
+  }
+}
 
-  final _billList = BehaviorSubject<List<BillModel>?>.seeded(null);
+@riverpod
+class BillHomeViewModel extends _$BillHomeViewModel {
+  @override
+  FutureOr<BillHomeState> build() async {
+    return await initData();
+  }
 
-  ValueStream<List<BillModel>?> get billList => _billList.stream;
-
-  final _debtList = BehaviorSubject<List<DebtModel>?>.seeded(null);
-
-  ValueStream<List<DebtModel>?> get debtList => _debtList.stream;
-
-  Future<void> initData() async {
-    final dbService = GetIt.I.get<DatabaseService>();
+  Future<BillHomeState> initData() async {
+    final dbService = ref.read(databaseServiceProvider.notifier);
     final tableList = await dbService.getTables();
     final allBills = await dbService.getBills();
 
     if (tableList.isEmpty) {
-      _groupTables.add(tableList);
-      return;
+      return BillHomeState(groupTables: tableList);
     }
-    final currentTableId = _tableId.value ?? tableList[0].id;
-    _tableId.add(currentTableId);
-    _groupTables.add(tableList);
 
-    final filteredBills = allBills.where((e) => e.tableId == tableId).toList();
+    final currentTableId = state.value?.selectedTableId ?? tableList[0].id;
+    final filteredBills =
+        allBills.where((e) => e.tableId == currentTableId).toList();
 
     final List<Future<BillModel>> futureBills = filteredBills.map((item) async {
       final settledByMaps = await dbService.getBillSettledBy(item.id ?? 0);
@@ -64,11 +80,11 @@ class BillHomeViewModel {
 
       balances[paidBy] = (balances[paidBy] ?? 0) + (bill.money - splitAmount);
 
-      participants.forEach((participant) {
+      for (var participant in participants) {
         if (participant != paidBy) {
           balances[participant] = (balances[participant] ?? 0) - splitAmount;
         }
-      });
+      }
     }
 
     List<DebtModel> debts = [];
@@ -79,7 +95,8 @@ class BillHomeViewModel {
           if (value > 0) {
             double toPay = amount.abs();
             double payment = value >= toPay ? toPay : value;
-            debts.add(DebtModel(debtor: debtor, creditor: creditor, amount: payment));
+            debts.add(
+                DebtModel(debtor: debtor, creditor: creditor, amount: payment));
             balances[creditor] = value - payment;
             balances[debtor] = 0;
           }
@@ -88,19 +105,23 @@ class BillHomeViewModel {
     });
 
     debts.forEach((debt) {
-      double payment = debt.amount;
-      debugPrint('${debt.debtor} 欠 ${debt.creditor} ${payment.toStringAsFixed(2)} 元');
+      debugPrint(
+          '${debt.debtor} 欠 ${debt.creditor} ${debt.amount.toStringAsFixed(2)} 元');
     });
 
-    _billList.add(billsWithSettledBy);
-    _debtList.add(debts);
+    return BillHomeState(
+      groupTables: tableList,
+      selectedTableId: currentTableId,
+      bills: billsWithSettledBy,
+      debts: debts,
+    );
   }
 
   Future<UpdateGroupResult> updateGroupName(String newTitle, int id) async {
     try {
-      final dbService = GetIt.I.get<DatabaseService>();
+      final dbService = ref.read(databaseServiceProvider.notifier);
       await dbService.updateTableTitle(id, newTitle);
-      await initData();
+      state = await AsyncValue.guard(() => initData());
       return UpdateGroupResult(isSuccess: true);
     } catch (e) {
       return UpdateGroupResult(isSuccess: false, errorMessage: "$e");
@@ -108,16 +129,17 @@ class BillHomeViewModel {
   }
 
   Future<void> changeGroup(int id) async {
-    _tableId.add(id);
-    await initData();
+    if (state.value == null) return;
+    state = AsyncValue.data(state.value!.copyWith(selectedTableId: id));
+    state = await AsyncValue.guard(() => initData());
   }
 
   Future<DeleteGroupResult> deleteGroup(int id) async {
     try {
-      final dbService = GetIt.I.get<DatabaseService>();
+      final dbService = ref.read(databaseServiceProvider.notifier);
       await dbService.deleteTable(id);
-      _tableId.add(null);
-      await initData();
+      state = AsyncValue.data(state.value!.copyWith(selectedTableId: null));
+      state = await AsyncValue.guard(() => initData());
       return DeleteGroupResult(isSuccess: true);
     } catch (e) {
       return DeleteGroupResult(isSuccess: false, errorMessage: "$e");

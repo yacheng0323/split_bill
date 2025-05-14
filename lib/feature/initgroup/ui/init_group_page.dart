@@ -1,11 +1,10 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:split_bill/config/router.gr.dart';
+import 'package:go_router/go_router.dart';
+import 'package:split_bill/config/router.dart';
 import 'package:split_bill/core/ui/color.dart';
 import 'package:split_bill/core/ui/textstyle.dart';
 
-@RoutePage()
 class InitGroupPage extends StatefulWidget {
   const InitGroupPage({super.key});
 
@@ -24,7 +23,8 @@ class _InitGroupPageState extends State<InitGroupPage> {
         backgroundColor: BillColors.backgroundColor,
         title: Text(
           "Split Bill",
-          style: TextGetter.headline6?.copyWith(color: BillColors.contentTextColor, fontWeight: FontWeight.w700),
+          style: TextGetter.headline6?.copyWith(
+              color: BillColors.contentTextColor, fontWeight: FontWeight.w700),
         ),
       ),
       body: Container(
@@ -72,8 +72,10 @@ class _InitGroupPageState extends State<InitGroupPage> {
                     inputFormatters: [LengthLimitingTextInputFormatter(20)],
                     decoration: InputDecoration(
                       hintText: "Enter A Group Name",
-                      hintStyle: TextGetter.bodyText1?.copyWith(color: const Color(0xffAAAAAA)),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7.5),
+                      hintStyle: TextGetter.bodyText1
+                          ?.copyWith(color: const Color(0xffAAAAAA)),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 7.5),
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.circular(30),
@@ -88,14 +90,17 @@ class _InitGroupPageState extends State<InitGroupPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: BillColors.deepYellow,
                     elevation: 4,
-                    padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 48, vertical: 10),
                   ),
                   onPressed: controller.text.isEmpty
                       ? null
                       : () {
-                          AutoRouter.of(context).push(
-                            InitMemberRoute(billTitle: controller.text),
-                          );
+                          // AutoRouter.of(context).push(
+                          //   InitMemberRoute(billTitle: controller.text),
+                          // );
+                          context.pushNamed(AppRoutes.Init_Member,
+                              queryParameters: {"title": controller.text});
                         },
                   child: Text(
                     "Submit to start",

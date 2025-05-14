@@ -1,28 +1,50 @@
 import 'package:get_it/get_it.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/subjects.dart';
-import 'package:split_bill/core/database/database_service.dart';
+import 'package:split_bill/core/repositories/database_service.dart';
 import 'package:split_bill/entities/group_table_model.dart';
 
-class InitMemberViewModel {
-  final _members = BehaviorSubject<List<String>>.seeded([]);
+part 'init_member_view_model.g.dart';
 
-  Stream<List<String>> get members => _members.stream;
+class InitMemberState {
+  final List<String>? members;
+  final String? billTitle;
+
+  InitMemberState({this.members, this.billTitle});
+
+  InitMemberState copyWith({List<String>? members, String? billTitle}) {
+    return InitMemberState(
+        members: members ?? this.members,
+        billTitle: billTitle ?? this.billTitle);
+  }
+}
+
+@riverpod
+class InitMemberViewModel extends _$InitMemberViewModel {
+  DatabaseService get _dbService => ref.read(databaseServiceProvider.notifier);
+
+  @override
+  InitMemberState build() {
+    return InitMemberState();
+  }
 
   void addMember(String name) {
-    final list = _members.value;
-    list.add(name);
-    _members.add(List.from(list));
+    if (name.trim().isEmpty) return;
+    if (state.members?.contains(name) ?? false) return;
+
+    state = state.copyWith(
+      members: [...state.members ?? [], name],
+    );
   }
 
   void removeMember(String name) {
-    final list = _members.value;
-    list.remove(name);
-    _members.add(List.from(list));
+    state = state.copyWith(
+        members: state.members?.where((e) => e != name).toList());
   }
 
   Future<void> submit(String billTitle) async {
-    final dbService = GetIt.I.get<DatabaseService>();
-    final tableId = await dbService.createTableAndReturnId(GroupTableModel(name: billTitle));
-    await dbService.insertTableMembers(tableId, _members.value);
+    final tableId = await _dbService
+        .createTableAndReturnId(GroupTableModel(name: billTitle));
+    await _dbService.insertTableMembers(tableId, state.members ?? []);
   }
 }

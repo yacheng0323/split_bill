@@ -1,16 +1,17 @@
 import 'dart:io';
 
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-class DatabaseHelper {
-  static final DatabaseHelper _instance = DatabaseHelper._internal();
-  factory DatabaseHelper() => _instance;
-  DatabaseHelper._internal();
+part 'database_provider.g.dart';
 
-  static Database? _database;
+@Riverpod(keepAlive: true)
+class DatabaseProvider extends _$DatabaseProvider {
+  Database? _database;
 
-  Future<Database> get database async {
+  @override
+  Future<Database> build() async {
     if (_database != null) return _database!;
     _database = await _initDatabase();
     return _database!;
