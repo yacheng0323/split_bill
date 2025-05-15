@@ -16,11 +16,13 @@ class BillHomeState {
   final List<DebtModel>? debts;
 
   BillHomeState({
-    this.groupTables,
+    List<GroupTableModel>? groupTables,
     this.selectedTableId,
-    this.bills,
-    this.debts,
-  });
+    List<BillModel>? bills,
+    List<DebtModel>? debts,
+  })  : groupTables = groupTables ?? [],
+        bills = bills ?? [],
+        debts = debts ?? [];
 
   BillHomeState copyWith({
     List<GroupTableModel>? groupTables,
@@ -129,8 +131,10 @@ class BillHomeViewModel extends _$BillHomeViewModel {
   }
 
   Future<void> changeGroup(int id) async {
-    if (state.value == null) return;
-    state = AsyncValue.data(state.value!.copyWith(selectedTableId: id));
+    final currentState = state.value;
+    if (currentState == null) return;
+
+    state = AsyncValue.data(currentState.copyWith(selectedTableId: id));
     state = await AsyncValue.guard(() => initData());
   }
 
@@ -138,7 +142,14 @@ class BillHomeViewModel extends _$BillHomeViewModel {
     try {
       final dbService = ref.read(databaseServiceProvider.notifier);
       await dbService.deleteTable(id);
-      state = AsyncValue.data(state.value!.copyWith(selectedTableId: null));
+
+      final currentState = state.value;
+      if (currentState == null) {
+        return DeleteGroupResult(
+            isSuccess: false, errorMessage: "State is null");
+      }
+
+      state = AsyncValue.data(currentState.copyWith(selectedTableId: null));
       state = await AsyncValue.guard(() => initData());
       return DeleteGroupResult(isSuccess: true);
     } catch (e) {

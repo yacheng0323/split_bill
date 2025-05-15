@@ -39,6 +39,9 @@ class _BillHomePageState extends ConsumerState<BillHomePage>
     return billHomeState.when(
       data: (state) {
         final tables = state.groupTables ?? [];
+        final selectedId = state.selectedTableId ?? 0;
+        final bills = state.bills ?? [];
+        final debts = state.debts ?? [];
 
         return Scaffold(
           backgroundColor: BillColors.backgroundColor,
@@ -110,7 +113,7 @@ class _BillHomePageState extends ConsumerState<BillHomePage>
                                           .changeGroup(item.id ?? 0);
                                     },
                                     onLongPress: () {
-                                      titleController.text = item.name;
+                                      titleController.text = item.name ?? '';
                                       showDialog(
                                         context: context,
                                         builder: (context) => Dialog(
@@ -142,7 +145,7 @@ class _BillHomePageState extends ConsumerState<BillHomePage>
                                     },
                                     child: _buildGroupItem(
                                       item: item,
-                                      selectedId: state.selectedTableId ?? 0,
+                                      selectedId: selectedId,
                                     ),
                                   );
                                 }
@@ -172,15 +175,15 @@ class _BillHomePageState extends ConsumerState<BillHomePage>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 _buildSectionTitle("Overview"),
-                                _buildDebtList(state.debts ?? []),
+                                _buildDebtList(debts),
                                 _buildSectionTitle("Bills Detail"),
                                 _buildBillList(
-                                  state.bills ?? [],
+                                  bills,
                                   onBillTapped: (bill) async {
                                     final result = await context.pushNamed(
                                       AppRoutes.Edit_Bill,
                                       queryParameters: {
-                                        "tableId": "${bill.tableId}"
+                                        "tableId": "${bill.tableId ?? 0}"
                                       },
                                       extra: bill,
                                     );
@@ -224,7 +227,7 @@ class _BillHomePageState extends ConsumerState<BillHomePage>
               : const SizedBox.shrink(),
           floatingActionButton: SpeedDialButton(
             tables: tables,
-            selectedTableId: state.selectedTableId,
+            selectedTableId: selectedId,
             onRefresh: () => ref.refresh(billHomeViewModelProvider),
           ),
         );

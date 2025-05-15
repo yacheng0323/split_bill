@@ -7,7 +7,7 @@ import 'config/router.dart' as router;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initInjections();
-  runApp(const SplitBillApp());
+  runApp(const ProviderScope(child: SplitBillApp()));
 }
 
 class SplitBillApp extends ConsumerStatefulWidget {

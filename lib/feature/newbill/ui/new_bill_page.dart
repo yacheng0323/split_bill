@@ -29,6 +29,7 @@ class _NewBillPageState extends ConsumerState<NewBillPage> {
 
   @override
   void initState() {
+    ref.read(newBillViewModelProvider.notifier).init(widget.tableId);
     super.initState();
   }
 
@@ -373,32 +374,61 @@ class _NewBillPageState extends ConsumerState<NewBillPage> {
                                     context: context,
                                     expand: false,
                                     builder: (context) {
-                                      return SingleChildScrollView(
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          child: ListView.separated(
-                                            physics:
-                                                const NeverScrollableScrollPhysics(),
-                                            shrinkWrap: true,
-                                            itemCount: members.length,
-                                            itemBuilder: (context, index) {
-                                              return ListTile(
-                                                leading: Checkbox(
-                                                  side: const BorderSide(
-                                                      color: BillColors
-                                                          .deepYellow),
-                                                  value: selectedList
-                                                      .contains(members[index]),
-                                                  activeColor:
-                                                      BillColors.deepYellow,
-                                                  onChanged: (value) {
+                                      return StatefulBuilder(builder:
+                                          (context, setBottomSheetState) {
+                                        return SingleChildScrollView(
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            child: ListView.separated(
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              shrinkWrap: true,
+                                              itemCount: members.length,
+                                              itemBuilder: (context, index) {
+                                                return ListTile(
+                                                  leading: Checkbox(
+                                                    side: const BorderSide(
+                                                        color: BillColors
+                                                            .deepYellow),
+                                                    value:
+                                                        selectedList.contains(
+                                                            members[index]),
+                                                    activeColor:
+                                                        BillColors.deepYellow,
+                                                    onChanged: (value) {
+                                                      ref
+                                                          .read(
+                                                              newBillViewModelProvider
+                                                                  .notifier)
+                                                          .toggleSettledMember(
+                                                              members[index]);
+                                                      setBottomSheetState(() {
+                                                        settledByController
+                                                            .text = selectedList
+                                                                .isEmpty
+                                                            ? ""
+                                                            : selectedList
+                                                                .map((e) => e)
+                                                                .toString();
+                                                      });
+                                                    },
+                                                  ),
+                                                  title: Transform.translate(
+                                                    offset:
+                                                        const Offset(-32, 0),
+                                                    child: Center(
+                                                      child:
+                                                          Text(members[index]),
+                                                    ),
+                                                  ),
+                                                  onTap: () {
                                                     ref
                                                         .read(
                                                             newBillViewModelProvider
                                                                 .notifier)
                                                         .toggleSettledMember(
                                                             members[index]);
-                                                    setState(() {
+                                                    setBottomSheetState(() {
                                                       settledByController.text =
                                                           selectedList.isEmpty
                                                               ? ""
@@ -407,42 +437,20 @@ class _NewBillPageState extends ConsumerState<NewBillPage> {
                                                                   .toString();
                                                     });
                                                   },
-                                                ),
-                                                title: Transform.translate(
-                                                  offset: const Offset(-32, 0),
-                                                  child: Center(
-                                                    child: Text(members[index]),
-                                                  ),
-                                                ),
-                                                onTap: () {
-                                                  ref
-                                                      .read(
-                                                          newBillViewModelProvider
-                                                              .notifier)
-                                                      .toggleSettledMember(
-                                                          members[index]);
-                                                  setState(() {
-                                                    settledByController.text =
-                                                        selectedList.isEmpty
-                                                            ? ""
-                                                            : selectedList
-                                                                .map((e) => e)
-                                                                .toString();
-                                                  });
-                                                },
-                                              );
-                                            },
-                                            separatorBuilder:
-                                                (BuildContext context,
-                                                    int index) {
-                                              return const Divider(
-                                                height: 1,
-                                                color: Color(0xffECECEC),
-                                              );
-                                            },
+                                                );
+                                              },
+                                              separatorBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                return const Divider(
+                                                  height: 1,
+                                                  color: Color(0xffECECEC),
+                                                );
+                                              },
+                                            ),
                                           ),
-                                        ),
-                                      );
+                                        );
+                                      });
                                     },
                                   );
                                 },
