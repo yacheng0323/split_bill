@@ -64,7 +64,7 @@ class NewBillViewModel extends _$NewBillViewModel {
     required String paidBy,
   }) async {
     try {
-      final dbService = ref.watch(databaseServiceProvider.notifier);
+      final dbService = ref.read(databaseServiceProvider.notifier);
       await dbService.insertBill(
         BillModel(
           title: title,
@@ -77,10 +77,11 @@ class NewBillViewModel extends _$NewBillViewModel {
       );
       state = AsyncValue.data(
           state.value!.copyWith(result: NewBillResult(isSuccess: true)));
+      return;
     } catch (e) {
-      // return NewBillResult(isSuccess: false, errorMessage: "$e");
       state = AsyncValue.data(state.value!.copyWith(
           result: NewBillResult(isSuccess: false, errorMessage: "$e")));
+      return;
     }
   }
 }
